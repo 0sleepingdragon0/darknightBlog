@@ -3,6 +3,8 @@ import { Font } from "astro:assets";
 import { fontConfig } from "@/config";
 import { collectUsedFontCssVars } from "@/utils/fontHelper";
 import "lxgw-wenkai-screen-webfont/lxgwwenkaiscreen.css";
+// 代码块用的等宽字体走本地包，不从 CDN 拉
+import "@fontsource-variable/jetbrains-mono/wght.css";
 
 const allCssVars = fontConfig.enable
 	? collectUsedFontCssVars(fontConfig)
@@ -58,6 +60,11 @@ const navbarTitleFontVar = fontConfig.enable
 		:root {
 			--font-lxgw-wenkai: ${WENKAI_FONT_STACK};
 			--font-blog-original: ${bodyFontFamily};
+			--font-jetbrains-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+			/* 这两个字体改成从 CDN 拉取时才会由 Astro Font API 定义；
+			   现在留空，给它们兜底值，免得别处 var() 引用失效 */
+			--font-zen-maru-gothic: ${WENKAI_FONT_STACK};
+			--font-inter: ${SYSTEM_FONT_STACK};
 			--font-original-banner-title: ${bannerTitleFontVar ? `var(${bannerTitleFontVar}, var(--font-blog-original))` : "var(--font-blog-original)"};
 			--font-original-banner-subtitle: ${bannerSubtitleFontVar ? `var(${bannerSubtitleFontVar}, var(--font-blog-original))` : "var(--font-blog-original)"};
 			--font-original-navbar-title: ${navbarTitleFontVar ? `var(${navbarTitleFontVar}, var(--font-blog-original))` : "var(--font-blog-original)"};

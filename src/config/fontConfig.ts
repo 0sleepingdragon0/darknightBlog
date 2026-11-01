@@ -93,14 +93,23 @@ export const fontConfig: FontSelectionConfig = {
 
 	// 各区域独立字体设置（填写上方 fonts 中的 cssVariable，留空则使用全局 selected 字体）
 	// 例如：bannerTitleFont: "--font-inter", 表示主页横幅主标题使用 Inter 字体
+	//
+	// 注意：下面留空是有意为之。上方 fontsource 来源的字体在构建时会去
+	// cdn.jsdelivr.net 拉取字体文件算 Capsize 指标，国内服务器连它不稳定，
+	// 一次抖动整个构建就失败。默认字体模式本来就是自托管的霞鹜文楷
+	// （FontSetup.astro 里的 --font-lxgw-wenkai），观感几乎没差别。
+	// 想要 Zen Maru Gothic / Inter，就把对应 cssVariable 填回来，
+	// 并把字体文件下到本地改用 provider: "local"。
 	// 主页横幅主标题字体
-	bannerTitleFont: "--font-zen-maru-gothic",
+	bannerTitleFont: "",
 	// 主页横幅副标题字体
-	bannerSubtitleFont: "--font-inter",
+	bannerSubtitleFont: "",
 	// 导航栏标题字体
 	navbarTitleFont: "",
-	// 代码块字体（用于代码高亮和等宽字体场景）
-	codeFont: "--font-jetbrains-mono",
+	// 代码块字体（用于代码高亮和等宽字体场景）。
+	// 这里留空，实际由 FontSetup.astro 用本地 @fontsource-variable/jetbrains-mono
+	// 定义 --font-jetbrains-mono，不经过 CDN。
+	codeFont: "",
 
 	// 本地字体子集化配置（构建时由 scripts/subset-fonts.ts 处理）
 	// key 为 fonts 数组中对应的 cssVariable，value 为子集化选项
