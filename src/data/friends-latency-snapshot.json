@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "generatedAt": null,
+  "probeLocation": "请运行 pnpm friend-latency 生成探测记录",
+  "results": {}
+}

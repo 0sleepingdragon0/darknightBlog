@@ -1,0 +1,128 @@
+---
+import { Icon } from "astro-icon/components";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import { announcementConfig } from "@/config/announcementConfig";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { WidgetComponentConfig } from "@/types/config";
+
+const config = announcementConfig;
+const links = config.links ?? (config.link ? [config.link] : []);
+
+interface Props {
+	class?: string;
+	style?: string;
+	widgetConfig?: WidgetComponentConfig;
+}
+const { class: className, style, widgetConfig } = Astro.props;
+
+const showTitle = widgetConfig?.showTitle !== false;
+---
+
+<!-- 组件显示现在由sidebarLayoutConfig统一控制，无需检查config.enable -->
+<WidgetLayout
+  name={config.title || i18n(I18nKey.announcement)}
+  showTitle={showTitle}
+  id="announcement"
+  class={["announcement-card", className].filter(Boolean).join(" ")}
+  style={style}
+>
+  <div>
+    <!-- 公告栏内容 -->
+    <div class="text-neutral-600 dark:text-neutral-300 leading-relaxed mb-3 whitespace-pre-line">
+      {config.content}
+    </div>
+
+    <!-- 可选链接和关闭按钮 -->
+    <div class="flex items-center justify-between gap-3">
+      <div class="flex flex-wrap items-center gap-2">
+        {
+          links.map(
+            (link) =>
+              link.enable !== false && (
+                <a
+                  href={link.url}
+                  target={link.external ? "_blank" : "_self"}
+                  rel={link.external ? "noopener noreferrer" : undefined}
+                  class="announcement-link px-3 py-1.5 text-sm font-medium active:scale-95"
+                >
+                  {link.text}
+                </a>
+              ),
+          )
+        }
+      </div>
+
+      {
+        config.closable && (
+          <button
+            class="btn-regular rounded-lg h-8 w-8 text-sm hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
+            onclick="this.closest('widget-layout').style.display='none'"
+            aria-label={i18n(I18nKey.announcementClose)}
+          >
+            <Icon is:inline name="fa7-solid:xmark" class="text-sm" />
+          </button>
+        )
+      }
+    </div>
+  </div>
+</WidgetLayout>
+
+<style>
+  :global(widget-layout.announcement-card #announcement) {
+    overflow: visible;
+  }
+
+  :global(.announcement-link) {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgb(120 120 120 / 16%);
+    border-radius: 10px;
+    background-color: transparent;
+    box-shadow:
+      0 2px 5px rgb(38 38 38 / 7%),
+      0 1px 2px rgb(38 38 38 / 4%),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8),
+      inset 0 -1px 0 rgb(112 112 112 / 10%);
+    color: var(--primary);
+    transition:
+      color 220ms ease,
+      box-shadow 220ms ease,
+      transform 220ms ease;
+  }
+
+  :global(.announcement-link:hover),
+  :global(.announcement-link:focus-visible),
+  :global(.announcement-link:active) {
+    border-style: dashed;
+    border-color: rgb(120 120 120 / 42%);
+    box-shadow:
+      0 3px 6px rgb(38 38 38 / 10%),
+      0 1px 2px rgb(38 38 38 / 5%),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9),
+      inset 0 -1px 0 rgb(112 112 112 / 16%);
+  }
+
+  :global(.announcement-link:focus-visible) {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+  }
+
+  :global(.dark) :global(.announcement-link) {
+    border-color: rgb(224 224 224 / 20%);
+  }
+
+  :global(.dark .announcement-link:hover),
+  :global(.dark .announcement-link:focus-visible),
+  :global(.dark .announcement-link:active) {
+    border-color: rgb(230 230 230 / 42%);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(.announcement-link) {
+      transition: none;
+    }
+  }
+</style>

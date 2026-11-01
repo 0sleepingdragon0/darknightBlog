@@ -1,0 +1,11 @@
+---
+import { sakuraConfig } from "@/config";
+
+const config = sakuraConfig;
+const baseUrl = import.meta.env.BASE_URL;
+---
+
+<script is:inline type="application/json" id="aemeath-sakura-config" set:html={JSON.stringify({ sakuraConfig: config, baseUrl }).replace(/</g, "\u003c")} />
+<script>
+	void import("@/scripts/sakura-effect");
+</script>

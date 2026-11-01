@@ -1,0 +1,19 @@
+---
+import FloatingButton from "@/components/common/FloatingButton.astro";
+---
+
+<!-- There can't be a filter on parent element, or it will break `fixed` -->
+<FloatingButton
+  id="back-to-top-btn"
+  icon="material-symbols:keyboard-arrow-up-rounded"
+  ariaLabel="Back to Top"
+  onclick="backToTop()"
+  class="hide" 
+/>
+
+<script is:raw is:inline>
+  function backToTop() {
+    // 直接使用原生滚动，避免OverlayScrollbars冲突
+    window.scroll({ top: 0, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+  }
+</script>

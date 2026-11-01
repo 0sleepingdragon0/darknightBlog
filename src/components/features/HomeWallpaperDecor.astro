@@ -1,0 +1,241 @@
+---
+import { Icon } from "astro-icon/components";
+import { getImage } from "astro:assets";
+import type { ImageMetadata } from "astro";
+import ImageWrapper from "@/components/common/ImageWrapper.astro";
+import { profileConfig, siteConfig } from "@/config";
+import { url } from "@/utils/url-utils";
+
+const quickLinks = [
+	{ label: "文章", href: url("/archive/") },
+	{ label: "友链", href: url("/friends/") },
+	{ label: "朋友圈", href: url("/moments/") },
+	{ label: "留言板", href: url("/guestbook/") },
+	{ label: "关于", href: url("/about/") },
+];
+
+const cardOrnaments: { key: string; src: string; initialStyle: string }[] = [];
+
+const socialLinks = [
+	...profileConfig.links,
+	{
+		name: "RSS",
+		icon: "material-symbols:rss-feed-rounded",
+		url: url("/rss.xml"),
+		showName: false,
+	},
+];
+
+type StickerImage = {
+	key: string;
+	src: string;
+	initialStyle?: string;
+	defaultStyle?: string;
+	nationalDayStyle?: string;
+	mobileStyle?: string;
+	mobileAnchor?: string;
+};
+
+const stickerImages: StickerImage[] = [];
+
+// Keep the original assets, but ship a 360px rendition for these small stickers.
+// This remains sharp at 3x pixel density without downloading the full artwork.
+const stickerModules = import.meta.glob<ImageMetadata>(
+	[
+		"../../../public/images/home-stickers/*.webp",
+		"../../../public/monthly-2026-08/loading-girl.webp",
+	],
+	{ import: "default" },
+);
+const optimizedStickers = await Promise.all(stickerImages.map(async (sticker) => {
+	const sourcePath = `../../../public${sticker.src.replace(import.meta.env.BASE_URL, "/")}`;
+	const loadSource = stickerModules[sourcePath];
+	if (!loadSource) return { ...sticker, width: undefined, height: undefined };
+	const source = await loadSource();
+	const image = await getImage({
+		src: source,
+		width: Math.min(360, source.width),
+		format: "webp",
+		quality: 85,
+	});
+	return {
+		...sticker,
+		src: image.src,
+		width: image.attributes.width,
+		height: image.attributes.height,
+	};
+}));
+
+const quoteSticker = optimizedStickers.find((sticker) => sticker.key === "quote");
+const floatingStickerImages = optimizedStickers.filter(
+	(sticker) => sticker.key !== "quote",
+);
+const mobileStickerKeys = [
+	"coder",
+	"blonde",
+	"brown-lightning",
+	"blue-witch",
+	"anniversary-77",
+];
+---
+
+<div class="home-wallpaper-decor" data-home-wallpaper-decor>
+	<div class="home-wallpaper-decor__stickers" aria-hidden="true">
+		{floatingStickerImages.map((sticker) => (
+			<div
+				class:list={[
+					"home-wallpaper-sticker",
+					`home-wallpaper-sticker--${sticker.key}`,
+				]}
+				style={sticker.initialStyle}
+				data-home-wallpaper-initial-style={sticker.initialStyle}
+				data-home-wallpaper-mobile-style={sticker.mobileStyle}
+				data-home-wallpaper-mobile-anchor={sticker.mobileAnchor}
+				data-home-wallpaper-default-style={sticker.defaultStyle}
+				data-home-wallpaper-national-day-style={sticker.nationalDayStyle}
+				data-home-wallpaper-mobile={mobileStickerKeys.includes(sticker.key) ? "true" : "false"}
+				data-home-wallpaper-sticker
+			>
+				<picture>
+					{!mobileStickerKeys.includes(sticker.key) && (
+						<source media="(max-width: 767px)" srcset="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" />
+					)}
+				<img
+					src={sticker.key === "anniversary-77" ? undefined : sticker.src}
+					data-national-day-src={
+						sticker.key === "anniversary-77" ? sticker.src : undefined
+					}
+					alt=""
+					width={sticker.width}
+					height={sticker.height}
+					style="width: 100% !important; height: auto !important; max-height: none !important; object-fit: contain !important;"
+					loading="eager"
+					fetchpriority="low"
+					decoding="async"
+					referrerpolicy="no-referrer"
+				/>
+				</picture>
+			</div>
+		))}
+
+		<div
+			class="home-wallpaper-sticker home-wallpaper-sticker--note home-wallpaper-sticker--fixed"
+			style="inset: 60.079825% auto auto 60.952083%;"
+		>
+			<span>欢迎访问</span>
+		</div>
+	</div>
+
+	<article class="home-wallpaper-card">
+		<div class="home-wallpaper-card__ornaments" aria-hidden="true">
+			{cardOrnaments.map((ornament) => (
+				<img
+					class:list={[
+						"home-wallpaper-card__ornament",
+						`home-wallpaper-card__ornament--${ornament.key}`,
+					]}
+					data-national-day-src={ornament.src}
+					data-home-wallpaper-sticker
+					alt=""
+					width="1254"
+					height="1254"
+					draggable="false"
+					loading="eager"
+					decoding="async"
+					style={`${ornament.initialStyle} width: var(--home-wallpaper-card-ornament-width) !important; height: auto !important; max-width: none !important; max-height: none !important; object-fit: contain !important; object-position: center !important; filter: none !important; opacity: 1 !important;`}
+				/>
+			))}
+		</div>
+		<div class="home-wallpaper-card__content">
+			<div class="home-wallpaper-card__avatar-wrap">
+				<ImageWrapper
+					src={profileConfig.avatar || "/assets/avatar-darknight.webp"}
+					alt={`${profileConfig.name}头像`}
+					class="home-wallpaper-card__avatar"
+					loading="eager"
+					fetchpriority="high"
+				/>
+				{quoteSticker && (
+					<img
+						class="home-wallpaper-card__avatar-sticker"
+						src={quoteSticker.src}
+						alt=""
+						aria-hidden="true"
+						draggable="false"
+						style="width: min(78px, 18vw) !important; height: auto !important; max-width: none !important; max-height: none !important; object-fit: contain !important; object-position: center !important; transform: translate(-7.030914px, -3.092804px);"
+						loading="eager"
+						decoding="async"
+						referrerpolicy="no-referrer"
+					/>
+				)}
+			</div>
+
+			<p class="home-wallpaper-card__identity">
+				<span class="home-wallpaper-card__identity-mark" aria-hidden="true"></span>
+				<span class="home-wallpaper-card__motion-text">{profileConfig.name}</span>
+			</p>
+			<h1><span class="home-wallpaper-card__motion-text">{siteConfig.title}</span></h1>
+			<p class="home-wallpaper-card__celebration">
+				<span class="home-wallpaper-card__motion-text">盛世华诞 与你同庆</span>
+			</p>
+			<p class="home-wallpaper-card__subtitle home-wallpaper-card__subtitle--default">
+				<span class="home-wallpaper-card__motion-text">{siteConfig.subtitle}</span>
+			</p>
+			<p class="home-wallpaper-card__subtitle home-wallpaper-card__subtitle--national-day">
+				<span class="home-wallpaper-card__motion-text">山河锦绣，万家灯火，愿以热爱守护这盛世中华</span>
+			</p>
+			<nav class="home-wallpaper-card__nav" aria-label="首页快捷导航">
+				{quickLinks.map((link) => (
+					<a href={link.href}>
+						<span class="home-wallpaper-card__motion-text">{link.label}</span>
+					</a>
+				))}
+			</nav>
+
+			{socialLinks.length > 0 && (
+				<div class="home-wallpaper-card__socials" aria-label="社交链接">
+					{socialLinks.map((link) =>
+						link.url.startsWith("copy:") ? (
+							<button
+								type="button"
+								class="home-wallpaper-card__social-link"
+								aria-label={`${link.name}，点击复制`}
+								data-home-wallpaper-copy={link.url.slice("copy:".length)}
+							>
+								<span class="home-wallpaper-card__social-icon" aria-hidden="true">
+									<Icon is:inline name={link.icon} aria-hidden="true" />
+								</span>
+							</button>
+						) : (
+							<a
+								class="home-wallpaper-card__social-link"
+								rel="me noopener noreferrer"
+								aria-label={link.name}
+								href={link.url}
+								target="_blank"
+							>
+								<span class="home-wallpaper-card__social-icon" aria-hidden="true">
+									<Icon is:inline name={link.icon} aria-hidden="true" />
+								</span>
+							</a>
+						),
+					)}
+				</div>
+			)}
+
+			<div
+				class="home-wallpaper-copy-toast"
+				data-home-wallpaper-copy-toast
+				role="status"
+				aria-live="polite"
+				aria-atomic="true"
+			></div>
+		</div>
+	</article>
+</div>
+
+<script>
+	if (document.documentElement.dataset.siteTheme === "aemeath") {
+		void import("@/scripts/home-wallpaper-decor");
+	}
+</script>

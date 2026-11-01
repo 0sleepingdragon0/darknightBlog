@@ -1,0 +1,206 @@
+---
+import { Icon } from "astro-icon/components";
+import { footerConfig, analyticsConfig, profileConfig, siteConfig } from "@/config";
+import { url } from "@/utils/url-utils";
+
+import FooterOrbit from "./FooterOrbit.astro";
+
+import "@/styles/footer.css";
+
+const statsReady = Boolean(analyticsConfig.umamiAnalytics?.websiteId && analyticsConfig.umamiAnalytics.shareId && analyticsConfig.umamiAnalytics.shareApiBase);
+const currentYear = new Date().getFullYear();
+const startAt = new Date(`${siteConfig.siteStartDate}T00:00:00+08:00`);
+const elapsedSeconds = Math.max(
+	0,
+	Math.floor((Date.now() - startAt.getTime()) / 1000),
+);
+const initialDays = Math.floor(elapsedSeconds / 86400);
+const initialHours = Math.floor((elapsedSeconds % 86400) / 3600);
+const initialMinutes = Math.floor((elapsedSeconds % 3600) / 60);
+const initialSeconds = elapsedSeconds % 60;
+
+const socials = [{ name: "博客", icon: "material-symbols:home-outline", url: "/", external: false }, ...profileConfig.links.filter((item) => /^https?:/u.test(item.url)).map((item) => ({ name: item.name, icon: item.icon, url: item.url, external: true }))];
+
+const techStack: {
+	label: string;
+	tone: string;
+	icon?: string;
+	image?: string;
+	href?: string;
+}[] = [
+	{ label: "Astro", tone: "violet", icon: "simple-icons:astro" },
+	{ label: "Tailwind CSS", tone: "cyan", icon: "simple-icons:tailwindcss" },
+	{ label: "Svelte", tone: "orange", icon: "simple-icons:svelte" },
+	{ label: "Pagefind", tone: "blue", icon: "material-symbols:search-rounded" },
+	{ label: "nginx", tone: "green", icon: "material-symbols:dns-rounded" },
+];
+---
+
+<div class="site-footer-stage" data-pagefind-ignore="all">
+	<section class="site-footer-kept-layers" aria-label="页脚装饰与技术栈">
+		<div class="site-footer-animals" aria-hidden="true">
+			<svg class="site-footer-stars" viewBox="0 0 1200 60" preserveAspectRatio="none">
+				<g fill="none" stroke="var(--footer-parcel-middle)" stroke-width="1.5" stroke-linecap="round" opacity="0.55">
+					<path d="M0 44 C 140 20, 260 58, 400 34 S 660 10, 800 36 S 1060 52, 1200 28"></path>
+				</g>
+				{Array.from({ length: 26 }).map((_, i) => {
+					const x = 20 + ((i * 137) % 1160);
+					const y = 10 + ((i * 53) % 40);
+					const r = 1 + ((i * 7) % 3) * 0.6;
+					const o = 0.3 + ((i * 13) % 7) / 10;
+					return <circle cx={x} cy={y} r={r} fill="var(--primary)" opacity={o.toFixed(2)} />;
+				})}
+			</svg>
+		</div>
+
+		<div class="site-footer-stack" aria-label="本站使用的技术">
+			{techStack.map((item) => {
+				const Tag = item.href ? "a" : "span";
+				return (
+					<Tag
+						class={`site-footer-stack__badge site-footer-stack__badge--${item.tone}`}
+						href={item.href}
+						target={item.href ? "_blank" : undefined}
+						rel={item.href ? "noopener noreferrer" : undefined}
+					>
+						{item.image ? (
+							<img src={item.image} alt="" width="14" height="14" loading="lazy" />
+						) : item.icon && <Icon name={item.icon} aria-hidden="true" />}
+						<span>{item.label}</span>
+					</Tag>
+				);
+			})}
+			<span class="site-footer-stack__badge site-footer-stack__badge--quiet">© {currentYear} / BY-NC-SA</span>
+		</div>
+
+	</section>
+
+	<footer id="site-footer" class="site-footer card-base transition" aria-label="网站页脚">
+
+		<div class="site-footer__decor" aria-hidden="true">
+			<svg class="site-footer__parcel" viewBox="0 0 190 150">
+				<defs>
+					<linearGradient id="site-footer-parcel-gradient" x1="0" y1="0" x2="1" y2="1">
+						<stop offset="0" stop-color="var(--footer-parcel-start)"></stop>
+						<stop offset="0.58" stop-color="var(--footer-parcel-middle)"></stop>
+						<stop offset="1" stop-color="var(--footer-parcel-end)"></stop>
+					</linearGradient>
+				</defs>
+				<g fill="none" stroke="url(#site-footer-parcel-gradient)" stroke-linecap="round" stroke-linejoin="round">
+					<path d="m78 58 39-20 39 20-39 20-39-20Zm0 0v45l39 21 39-21V58m-39 20v46m-20-76 39 20" stroke-width="3"></path>
+					<path d="M40 95c11 0 18 1 25 7m-8-15 9 15-16 5M164 40c-10-8-21-11-34-10m12-8-13 8 11 10" stroke-width="2.5"></path>
+					<path d="M38 51h24M45 62h18" stroke-width="2" stroke-dasharray="5 7"></path>
+				</g>
+				<g fill="url(#site-footer-parcel-gradient)">
+					<circle cx="39" cy="95" r="3"></circle>
+					<circle cx="47" cy="40" r="2"></circle>
+					<circle cx="171" cy="114" r="2.5"></circle>
+				</g>
+			</svg>
+		</div>
+
+		<div class="site-footer__content">
+			<nav class="site-footer__nav" aria-label="页脚快捷导航">
+				{socials.map((social) => (
+					<a
+						class="site-footer__nav-link"
+						href={social.url}
+						target={social.external ? "_blank" : undefined}
+						rel={social.external ? "noreferrer" : undefined}
+					>
+						<Icon name={social.icon} aria-hidden="true" />
+						<span>{social.name}</span>
+					</a>
+				))}
+			</nav>
+
+			<div class="site-footer__runtime" aria-label="网站运行时间">
+				<FooterOrbit />
+				<time data-runtime datetime={siteConfig.siteStartDate}>
+					本站已萌萌哒 <strong>{initialDays}</strong> 天 <strong>{initialHours}</strong> 小时 <strong>{initialMinutes}</strong> 分 <strong>{initialSeconds}</strong> 秒
+				</time>
+				<span class="site-footer__runtime-sparkle" aria-hidden="true">✦</span>
+			</div>
+
+			{statsReady && (
+			<div class="site-footer__traffic" aria-label="网站访问统计">
+				<span class="site-footer__traffic-item">
+					<span>今日访客：</span>
+					<strong data-umami-stat="todayVisitors" aria-live="polite">{statsReady ? "加载中" : "未配置"}</strong>
+				</span>
+				<i aria-hidden="true">|</i>
+				<span class="site-footer__traffic-item">
+					<span>今日访问：</span>
+					<strong data-umami-stat="todayPageviews" aria-live="polite">{statsReady ? "加载中" : "未配置"}</strong>
+				</span>
+				<i aria-hidden="true">|</i>
+				<span class="site-footer__traffic-item">
+					<span>本站访客：</span>
+					<strong data-umami-stat="visitors" aria-live="polite">{statsReady ? "加载中" : "未配置"}</strong>
+				</span>
+				<i aria-hidden="true">|</i>
+				<span class="site-footer__traffic-item">
+					<span>本站访问：</span>
+					<strong data-umami-stat="pageviews" aria-live="polite">{statsReady ? "加载中" : "未配置"}</strong>
+				</span>
+			</div>
+			)}
+
+			<div class="site-footer__divider" aria-hidden="true">
+				<span></span>
+				<i>✦</i>
+				<span></span>
+			</div>
+
+			<div class="site-footer__meta">
+				<span>© {currentYear} {profileConfig.name}. All Rights Reserved.</span>
+				<span class="site-footer__meta-separator" aria-hidden="true"></span>
+				<a href={url("rss.xml")}>
+					<Icon is:inline name="material-symbols:rss-feed-rounded" class="site-footer__rss-icon" aria-hidden="true" />
+					<span>RSS</span>
+				</a>
+				<span class="site-footer__meta-separator" aria-hidden="true"></span>
+				<a href={url("sitemap-index.xml")}>
+					<svg viewBox="0 0 32 32" aria-hidden="true">
+						<rect x="13" y="2.5" width="6" height="6" rx="1.5"></rect>
+						<rect x="3" y="23.5" width="6" height="6" rx="1.5"></rect>
+						<rect x="13" y="23.5" width="6" height="6" rx="1.5"></rect>
+						<rect x="23" y="23.5" width="6" height="6" rx="1.5"></rect>
+						<path d="M16 8.5v7M6 23.5v-5h20v5M16 15.5v8"></path>
+					</svg>
+					<span>Sitemap</span>
+				</a>
+			</div>
+
+			<div class="site-footer__powered">
+				<span>Powered by</span>
+				<a href="https://astro.build" target="_blank" rel="noreferrer">Astro</a>
+				<span>&amp;</span>
+				<span class="site-footer__powered-name">Aemeath {siteConfig.themeVersion || "V1.1.1"}</span>
+			</div>
+
+			<div class="site-footer__records" aria-label="网站备案信息">{(footerConfig.records ?? []).map((record) => <a href={record.url} target="_blank" rel="noopener noreferrer"><span>{record.label}</span></a>)}</div>
+		</div>
+	</footer>
+</div>
+
+<script is:inline define:vars={{ startAt: startAt.getTime() }}>
+	const renderFooterRuntime = () => {
+		const runtimes = document.querySelectorAll("[data-runtime]");
+		if (!runtimes.length) return;
+
+		const seconds = Math.max(0, Math.floor((Date.now() - startAt) / 1000));
+		const days = Math.floor(seconds / 86400);
+		const hours = Math.floor((seconds % 86400) / 3600);
+		const minutes = Math.floor((seconds % 3600) / 60);
+		const secs = seconds % 60;
+		const markup = `本站已萌萌哒 <strong>${days}</strong> 天 <strong>${hours}</strong> 小时 <strong>${minutes}</strong> 分 <strong>${secs}</strong> 秒`;
+		runtimes.forEach((runtime) => {
+			runtime.innerHTML = markup;
+		});
+	};
+
+	if (window.__siteFooterRuntimeInterval) window.clearInterval(window.__siteFooterRuntimeInterval);
+	renderFooterRuntime();
+	window.__siteFooterRuntimeInterval = window.setInterval(renderFooterRuntime, 1000);
+</script>

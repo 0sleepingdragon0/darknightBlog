@@ -1,0 +1,180 @@
+.friends-heading-row {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	align-items: center;
+	gap: clamp(1rem, 4vw, 3rem);
+}
+
+.friends-heading-copy {
+	min-width: 0;
+}
+
+.friends-heading-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-self: end;
+	gap: 0.55rem;
+}
+
+.friends-apply-button {
+	display: inline-flex;
+	align-items: center;
+	justify-self: end;
+	gap: 0.35rem;
+	max-width: 100%;
+	min-height: 2.5rem;
+	padding: 0.35rem 0.7rem;
+	border: 1px dashed rgba(255, 246, 219, 0.55);
+	border-radius: 0.75rem;
+	background: rgba(255, 255, 255, 0.12);
+	box-shadow:
+		0 0.15rem 0.32rem rgba(17, 17, 25, 0.1),
+		0 0.04rem 0.15rem rgba(17, 17, 25, 0.06),
+		inset 0 1px 0 rgba(255, 255, 255, 0.22);
+	-webkit-backdrop-filter: blur(4px) saturate(1.02);
+	backdrop-filter: blur(4px) saturate(1.02);
+	color: #79baff;
+	font-size: 0.95rem;
+	font-weight: 700;
+	line-height: 1;
+	text-decoration: none;
+	white-space: nowrap;
+	cursor: var(--cursor-pointer, pointer);
+	transition: border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+}
+
+.friends-recommendation-button {
+	font-family: inherit;
+	appearance: none;
+}
+
+.friends-apply-button svg {
+	width: 1.2rem;
+	height: 1.2rem;
+	flex: none;
+	color: #9bd0ff;
+}
+
+.friends-apply-button:hover,
+.friends-apply-button:focus-visible,
+.friends-apply-button:active {
+	border-color: rgba(121, 186, 255, 0.72);
+	box-shadow:
+		0 0.2rem 0.36rem rgba(17, 17, 25, 0.13),
+		0 0.06rem 0.18rem rgba(17, 17, 25, 0.08),
+		inset 0 1px 0 rgba(255, 255, 255, 0.3),
+		0 0 0.65rem rgba(121, 186, 255, 0.24);
+	transform: translateY(-1px);
+}
+
+.friends-apply-button:focus-visible {
+	outline: 2px solid rgba(121, 186, 255, 0.72);
+	outline-offset: 3px;
+}
+
+.friends-recommendation-button:focus-visible {
+	outline: 2px solid rgba(121, 186, 255, 0.72);
+	outline-offset: 3px;
+}
+
+:root.dark .friends-apply-button {
+	border-color: rgba(255, 246, 219, 0.3);
+	background: rgba(255, 255, 255, 0.06);
+	color: #a9d5ff;
+}
+
+:root.dark .friends-apply-button svg {
+	color: #c1e2ff;
+}
+
+.friends-magic-button {
+	display: inline-flex;
+	align-items: center;
+	justify-self: end;
+	gap: 0.35rem;
+	max-width: 100%;
+	min-height: 2.5rem;
+	padding: 0.35rem 0.7rem;
+	border: 1px dashed rgba(255, 246, 219, 0.55);
+	border-radius: 0.75rem;
+	background: rgba(255, 255, 255, 0.12);
+	box-shadow:
+		0 0.15rem 0.32rem rgba(17, 17, 25, 0.1),
+		0 0.04rem 0.15rem rgba(17, 17, 25, 0.06),
+		inset 0 1px 0 rgba(255, 255, 255, 0.22);
+	-webkit-backdrop-filter: blur(4px) saturate(1.02);
+	backdrop-filter: blur(4px) saturate(1.02);
+	color: #e2bc74;
+	font-size: 0.95rem;
+	font-weight: 700;
+	line-height: 1;
+	white-space: nowrap;
+	text-decoration: none;
+	cursor: var(--cursor-pointer, pointer);
+	transition: border-color 220ms ease, box-shadow 220ms ease, transform 220ms ease;
+}
+
+.friends-magic-button svg {
+	width: 1.2rem;
+	height: 1.2rem;
+	flex: none;
+	color: #edcf91;
+}
+
+.friends-recommendation-button svg {
+	width: 1.2rem;
+	height: 1.2rem;
+	flex: none;
+	color: #9bd0ff;
+}
+
+:root.dark .friends-recommendation-button {
+	border-color: rgba(255, 246, 219, 0.3);
+	background: rgba(255, 255, 255, 0.06);
+	color: #a9d5ff;
+}
+
+:root.dark .friends-recommendation-button svg {
+	color: #c1e2ff;
+}
+
+.friends-magic-button:hover,
+.friends-magic-button:focus-visible {
+	border-color: rgba(224, 163, 34, 0.48);
+	box-shadow:
+		0 0.2rem 0.36rem rgba(17, 17, 25, 0.13),
+		0 0.06rem 0.18rem rgba(17, 17, 25, 0.08),
+		inset 0 1px 0 rgba(255, 255, 255, 0.3);
+	transform: translateY(-1px);
+}
+
+.friends-magic-button:focus-visible {
+	outline: 2px solid color-mix(in srgb, #e0a322 68%, transparent);
+	outline-offset: 3px;
+}
+
+:root.dark .friends-magic-button {
+	border-color: rgba(255, 246, 219, 0.3);
+	background: rgba(255, 255, 255, 0.06);
+	color: #f4d993;
+}
+
+:root.dark .friends-magic-button svg {
+	color: #f6dfa6;
+}
+
+@media (max-width: 767px) {
+	.friends-heading-row {
+		grid-template-columns: 1fr;
+		gap: 0.8rem;
+	}
+
+	.friends-magic-button {
+		justify-self: start;
+	}
+
+	.friends-heading-actions {
+		justify-self: start;
+	}
+}

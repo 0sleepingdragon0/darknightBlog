@@ -1,0 +1,435 @@
+---
+// 首页入场动画：复用作品展示页现有的角色与上下快门背景。
+// 组件固定在主布局中，以便通过 Swup 返回首页时也能重新播放。
+import { homePortfolioIntroSettings } from "@/config/homePortfolioIntro";
+
+interface Props {
+	initialHome?: boolean;
+}
+
+const { initialHome = false } = Astro.props;
+const defaultCharacter =
+	homePortfolioIntroSettings.characters.find(
+		(character) =>
+			character.id === homePortfolioIntroSettings.defaultCharacterId,
+	) ?? homePortfolioIntroSettings.characters[0];
+const desktopBanners = homePortfolioIntroSettings.banners.desktop;
+const mobileBanners = homePortfolioIntroSettings.banners.mobile;
+const defaultTopBanner =
+	desktopBanners.top.find(
+		(banner) => banner.id === homePortfolioIntroSettings.defaultTopBannerId,
+	) ?? desktopBanners.top[0];
+const defaultBottomBanner =
+	desktopBanners.bottom.find(
+		(banner) => banner.id === homePortfolioIntroSettings.defaultBottomBannerId,
+	) ?? desktopBanners.bottom[0];
+const defaultMobileTopBanner =
+	mobileBanners.top.find(
+		(banner) =>
+			banner.id === homePortfolioIntroSettings.defaultMobileTopBannerId,
+	) ?? mobileBanners.top[0];
+const defaultMobileBottomBanner =
+	mobileBanners.bottom.find(
+		(banner) =>
+			banner.id === homePortfolioIntroSettings.defaultMobileBottomBannerId,
+	) ?? mobileBanners.bottom[0];
+const initialStyle = initialHome
+	? "position: fixed; inset: 0; z-index: 49; background: #f8e4ad;"
+	: undefined;
+---
+
+<section
+	id="home-portfolio-intro"
+	class:list={["home-portfolio-intro", initialHome && "home-portfolio-intro--boot"]}
+	style={initialStyle}
+	data-enabled-storage-key={homePortfolioIntroSettings.enabledStorageKey}
+	data-character-storage-key={homePortfolioIntroSettings.characterStorageKey}
+	data-top-banner-storage-key={homePortfolioIntroSettings.topBannerStorageKey}
+	data-bottom-banner-storage-key={homePortfolioIntroSettings.bottomBannerStorageKey}
+	data-default-character={homePortfolioIntroSettings.defaultCharacterId}
+	data-default-top-banner={homePortfolioIntroSettings.defaultTopBannerId}
+	data-default-bottom-banner={homePortfolioIntroSettings.defaultBottomBannerId}
+	data-default-mobile-top-banner={homePortfolioIntroSettings.defaultMobileTopBannerId}
+	data-default-mobile-bottom-banner={homePortfolioIntroSettings.defaultMobileBottomBannerId}
+	data-character-options={JSON.stringify(homePortfolioIntroSettings.characters)}
+	data-banner-options={JSON.stringify(homePortfolioIntroSettings.banners)}
+	aria-hidden="true"
+>
+	<div class="home-portfolio-intro__backdrop"></div>
+	<div class="home-portfolio-intro__scenes">
+		<picture>
+			<source media="(max-width: 779px)" data-banner-src={defaultMobileTopBanner.src} />
+			<img
+				class="home-portfolio-intro__scene home-portfolio-intro__scene--top"
+				data-banner-src={defaultTopBanner.src}
+				data-banner-id={defaultTopBanner.id}
+				alt=""
+				aria-hidden="true"
+				decoding="async"
+				fetchpriority="high"
+			/>
+		</picture>
+		<picture>
+			<source media="(max-width: 779px)" data-banner-src={defaultMobileBottomBanner.src} />
+			<img
+				class="home-portfolio-intro__scene home-portfolio-intro__scene--bottom"
+				data-banner-src={defaultBottomBanner.src}
+				data-banner-id={defaultBottomBanner.id}
+				alt=""
+				aria-hidden="true"
+				decoding="async"
+				fetchpriority="high"
+			/>
+		</picture>
+	</div>
+	<div class="home-portfolio-intro__band">
+		<div class="home-portfolio-intro__title" aria-hidden="true">
+			<span class="home-portfolio-intro__word home-portfolio-intro__word--left">鸣潮</span>
+			<span class="home-portfolio-intro__word home-portfolio-intro__word--right">往复</span>
+		</div>
+	</div>
+	<img
+		class="home-portfolio-intro__character"
+		data-character-src={defaultCharacter.src}
+		data-character-id={defaultCharacter.id}
+		alt=""
+		aria-hidden="true"
+		decoding="async"
+		fetchpriority="high"
+	/>
+	<div class="home-portfolio-intro__vignette"></div>
+</section>
+
+<script>
+	if (document.documentElement.dataset.siteTheme === "aemeath") {
+		void import("@/scripts/home-portfolio-intro");
+	}
+</script>
+
+<style is:global>
+	.home-portfolio-intro {
+		/* Match the compact framing in the reference: two equal scenes, with slim blue-white breathing room. */
+		--intro-band-height: clamp(2.75rem, 5.2vh, 3.7rem);
+		--intro-edge-gap: clamp(1.25rem, 3.5vh, 2.4rem);
+		/* Soft cream-yellow: bright enough to keep the illustrations and typography readable. */
+		--intro-surface: #fffdf7;
+		--intro-surface-deep: #fff4d5;
+		--intro-surface-ink: #f8e4ad;
+		--intro-strip-delay: 1.35s;
+		--intro-strip-duration: 2.7s;
+		position: fixed;
+		z-index: 49;
+		inset: 0;
+		overflow: hidden;
+		isolation: isolate;
+		visibility: hidden;
+		opacity: 0;
+		pointer-events: none;
+		background: var(--intro-surface-ink);
+		clip-path: inset(0 0 0 0);
+		contain: layout paint style;
+		transform: translate3d(0, 0, 0);
+		will-change: transform;
+		transition:
+			opacity 0.14s ease-out,
+			visibility 0s linear 0.14s;
+	}
+
+	.home-portfolio-intro.is-playing {
+		visibility: visible;
+		opacity: 1;
+		pointer-events: auto;
+		transition-delay: 0s;
+	}
+
+	.home-portfolio-intro.is-preparing {
+		visibility: visible;
+		opacity: 1;
+		pointer-events: auto;
+		transition: none;
+	}
+
+	.home-portfolio-intro--boot {
+		visibility: visible;
+		opacity: 1;
+		pointer-events: auto;
+		transition: none;
+	}
+
+	.home-portfolio-intro.is-finishing {
+		opacity: 1;
+		visibility: visible;
+		pointer-events: none;
+		animation: home-portfolio-intro-lift 1.1s cubic-bezier(0.7, 0, 0.17, 1) both;
+		transition: none;
+	}
+
+	.home-portfolio-intro.is-complete {
+		visibility: hidden !important;
+		opacity: 0 !important;
+		pointer-events: none !important;
+		transform: translate3d(0, 0, 0) !important;
+		transition: none !important;
+	}
+
+	.home-portfolio-intro__backdrop,
+	.home-portfolio-intro__scenes,
+	.home-portfolio-intro__band,
+	.home-portfolio-intro__vignette {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+
+	.home-portfolio-intro__backdrop {
+		z-index: 0;
+		background:
+			radial-gradient(circle at 50% 49%, rgb(255 205 101 / 0.3), transparent 33%),
+			linear-gradient(145deg, var(--intro-surface), var(--intro-surface-deep) 60%, var(--intro-surface-ink));
+	}
+
+	.home-portfolio-intro__scenes {
+		z-index: 1;
+	}
+
+	.home-portfolio-intro__scene {
+		position: absolute;
+		display: block;
+		width: 100%;
+		max-width: none;
+		object-fit: cover;
+		will-change: transform;
+	}
+
+	.home-portfolio-intro__scene--top {
+		top: var(--intro-edge-gap);
+		height: calc(50% - var(--intro-edge-gap) - (var(--intro-band-height) / 2));
+		object-position: center 43%;
+		transform: translate3d(-112%, 0, 0) scale(1.07);
+	}
+
+	.home-portfolio-intro__scene--bottom {
+		bottom: var(--intro-edge-gap);
+		height: calc(50% - var(--intro-edge-gap) - (var(--intro-band-height) / 2));
+		object-position: center 52%;
+		transform: translate3d(112%, 0, 0) scale(1.07);
+	}
+
+	.home-portfolio-intro__band {
+		z-index: 4;
+		top: 50%;
+		bottom: auto;
+		height: var(--intro-band-height);
+		/* This is only a positioning layer for the two words, not a visible banner. */
+		background: transparent;
+		border: 0;
+		box-shadow: none;
+		transform: translateY(-50%);
+		opacity: 1;
+	}
+
+	.home-portfolio-intro__title {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		height: 100%;
+		padding: 0 clamp(1.5rem, 6vw, 5.5rem);
+		white-space: nowrap;
+	}
+
+	.home-portfolio-intro__word {
+		display: inline-block;
+		color: #fff;
+		font-family: "ZCOOL KuaiLe", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+		font-size: clamp(4rem, 13vw, 11.5rem);
+		font-weight: 900;
+		line-height: 0.82;
+		letter-spacing: 0.045em;
+		text-shadow:
+			0.055em 0.055em 0 #15131a,
+			-0.055em 0.055em 0 #15131a,
+			0.055em -0.055em 0 #15131a,
+			-0.055em -0.055em 0 #15131a,
+			0 0.08em 0.18em rgba(0, 0, 0, 0.68);
+		will-change: transform, opacity;
+		opacity: 0;
+	}
+
+	.home-portfolio-intro__word--left {
+		transform: translate3d(-24vw, 0, 0) rotate(-2deg);
+	}
+
+	.home-portfolio-intro__word--right {
+		transform: translate3d(24vw, 0, 0) rotate(2deg);
+	}
+
+	.home-portfolio-intro__character {
+		position: absolute;
+		z-index: 5;
+		bottom: 0;
+		left: 49%;
+		display: block;
+		width: auto;
+		max-width: min(88vw, 48rem);
+		height: min(100svh, 64rem);
+		object-fit: contain;
+		object-position: center bottom;
+		opacity: 0;
+		transform: translate3d(-50%, 14%, 0) scale(0.88);
+		will-change: transform, opacity;
+		pointer-events: none;
+	}
+
+	.home-portfolio-intro__vignette {
+		z-index: 7;
+		background: transparent;
+		opacity: 0;
+	}
+
+	.home-portfolio-intro.is-playing .home-portfolio-intro__scene--top {
+		animation: home-portfolio-intro-scene-top var(--intro-strip-duration) var(--intro-strip-delay) cubic-bezier(0.16, 0.82, 0.22, 1) both;
+	}
+
+	.home-portfolio-intro.is-playing .home-portfolio-intro__scene--bottom {
+		animation: home-portfolio-intro-scene-bottom var(--intro-strip-duration) var(--intro-strip-delay) cubic-bezier(0.16, 0.82, 0.22, 1) both;
+	}
+
+	.home-portfolio-intro.is-playing .home-portfolio-intro__character {
+		animation: home-portfolio-intro-character 2s cubic-bezier(0.18, 0.76, 0.2, 1) both;
+	}
+
+	.home-portfolio-intro.is-playing .home-portfolio-intro__word--left {
+		animation: home-portfolio-intro-word-left var(--intro-strip-duration) var(--intro-strip-delay) cubic-bezier(0.16, 0.82, 0.22, 1) both;
+	}
+
+	.home-portfolio-intro.is-playing .home-portfolio-intro__word--right {
+		animation: home-portfolio-intro-word-right var(--intro-strip-duration) var(--intro-strip-delay) cubic-bezier(0.16, 0.82, 0.22, 1) both;
+	}
+
+	.home-portfolio-intro.is-playing .home-portfolio-intro__vignette {
+		/* Do not tint the page when the character starts its entrance. */
+		opacity: 0;
+	}
+
+	@keyframes home-portfolio-intro-scene-top {
+		0% { transform: translate3d(-112%, 0, 0) scale(1.055); }
+		100% { transform: translate3d(0, 0, 0) scale(1); }
+	}
+
+	@keyframes home-portfolio-intro-scene-bottom {
+		0% { transform: translate3d(112%, 0, 0) scale(1.055); }
+		100% { transform: translate3d(0, 0, 0) scale(1); }
+	}
+
+	@keyframes home-portfolio-intro-character {
+		from { opacity: 0; transform: translate3d(-50%, 16%, 0) scale(0.82); }
+		to { opacity: 1; transform: translate3d(-50%, 0, 0) scale(1); }
+	}
+
+	@keyframes home-portfolio-intro-word-left {
+		0% { opacity: 0; transform: translate3d(-24vw, 0, 0) rotate(-5deg) scale(0.9); }
+		100% { opacity: 1; transform: translate3d(0, 0, 0) rotate(-1.5deg) scale(1); }
+	}
+
+	@keyframes home-portfolio-intro-word-right {
+		0% { opacity: 0; transform: translate3d(24vw, 0, 0) rotate(5deg) scale(0.9); }
+		100% { opacity: 1; transform: translate3d(0, 0, 0) rotate(1.5deg) scale(1); }
+	}
+
+	@keyframes home-portfolio-intro-lift {
+		from { transform: translate3d(0, 0, 0); }
+		to { transform: translate3d(0, -106svh, 0); }
+	}
+
+	html.home-portfolio-intro-active,
+	body.home-portfolio-intro-active {
+		overflow: hidden;
+		overscroll-behavior: none;
+	}
+
+	body.home-portfolio-intro-active .floating-controls-container,
+	body.home-portfolio-intro-active #spine-model-container,
+	body.home-portfolio-intro-active #l2d-widget-container {
+		opacity: 0 !important;
+		pointer-events: none !important;
+		transform: translate3d(0, 1rem, 0) !important;
+		transition: opacity 0.2s ease, transform 0.2s ease;
+	}
+
+	#top-row.home-intro-navbar-boot,
+	html.home-portfolio-intro-active #top-row {
+		opacity: 0 !important;
+		pointer-events: none !important;
+		transform: translate3d(0, -130%, 0) !important;
+		transition: none !important;
+	}
+
+	#top-row.home-intro-navbar-boot,
+	#top-row.home-intro-navbar-reset {
+		transition: none !important;
+	}
+
+	#top-row.home-intro-navbar-revealing {
+		/* The actual reveal runs through Web Animations so it cannot be collapsed into one paint. */
+		transition: none !important;
+	}
+
+	/* A returning visit in the same tab should never flash the boot overlay or hide the navbar. */
+	html.home-portfolio-intro-seen .home-portfolio-intro--boot {
+		visibility: hidden !important;
+		opacity: 0 !important;
+		pointer-events: none !important;
+	}
+
+	/* A disabled intro should never leave a boot overlay or hidden navbar behind while
+	   the client bundle is being hydrated. */
+	html.home-portfolio-intro-disabled .home-portfolio-intro--boot {
+		visibility: hidden !important;
+		opacity: 0 !important;
+		pointer-events: none !important;
+	}
+
+	html.home-portfolio-intro-disabled #top-row.home-intro-navbar-boot {
+		opacity: 1 !important;
+		pointer-events: auto !important;
+		transform: none !important;
+	}
+
+	html.home-portfolio-intro-seen #top-row.home-intro-navbar-boot {
+		opacity: 1 !important;
+		pointer-events: auto !important;
+		transform: none !important;
+	}
+
+	@media (max-width: 720px) {
+		.home-portfolio-intro {
+			--intro-band-height: clamp(2.25rem, 5.2svh, 3.5rem);
+			--intro-edge-gap: clamp(0.85rem, 2.8svh, 1.6rem);
+		}
+
+		.home-portfolio-intro__scene--top {
+			object-position: 54% 44%;
+		}
+
+		.home-portfolio-intro__scene--bottom {
+			object-position: 50% 50%;
+		}
+
+		.home-portfolio-intro__title {
+			padding-inline: clamp(0.9rem, 5vw, 1.8rem);
+		}
+
+		.home-portfolio-intro__word {
+			font-size: clamp(3.25rem, 16.5vw, 5.8rem);
+			letter-spacing: 0;
+		}
+
+		.home-portfolio-intro__character {
+			left: 50%;
+			/* 留出中央标题的安全区，避免角色立绘压住“鸣潮 / 往复”。 */
+			max-width: 72vw;
+			height: min(49svh, 32rem);
+		}
+	}
+
+</style>

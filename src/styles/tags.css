@@ -1,0 +1,6 @@
+.tag-item,
+.tag-item:hover,
+.tag-item .tag-count-badge {
+    background: transparent;
+    color: var(--primary);
+}
