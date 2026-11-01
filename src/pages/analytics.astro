@@ -17,6 +17,12 @@ const historicalPageviews = umamiAnalytics?.historicalStats?.pageviews ?? 0;
 const hasPublicStats = Boolean(
 	umamiAnalytics?.websiteId && shareId && shareApiBase,
 );
+// Umami 还没接（analyticsConfig 里是空的），这个页面没有任何数据可展示，
+// 而且它引用的几张插图是主题作者自己的素材，已经删掉了。
+// 所以统计没配好之前，让它和其他未启用的页面一样走统一的 404 处理。
+if (!hasPublicStats) {
+	return Astro.redirect("/404/");
+}
 const sourceLabel = shareApiBase.includes("cloud.umami.is")
 	? "Umami Cloud"
 	: "Umami";
