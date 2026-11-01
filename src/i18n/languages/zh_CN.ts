@@ -50,9 +50,9 @@ export const zh_CN: Translation = {
 	[Key.comments]: "评论",
 	[Key.commentSection]: "评论区",
 	[Key.commentSubtitle]: "分享你的想法，与大家交流讨论",
-	[Key.commentNotConfigured]: "评论系统暂未配置",
+	[Key.commentNotConfigured]: "评论还没开通",
 	[Key.guestbookCommentHint]:
-		"您还未在配置文件中启用评论系统，启用后访客才可在此留言",
+		"留言功能暂时没接上，等接好了这里就能直接写东西",
 	[Key.friends]: "友链",
 	[Key.friendsDescription]: "这里是我的朋友们，欢迎互相访问交流",
 	[Key.searchFriends]: "搜索友链...",

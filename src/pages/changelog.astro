@@ -23,6 +23,11 @@ const articleByVersion = new Map(
 const availableNotices = notices.filter((notice) =>
 	articleByVersion.has(notice.version),
 );
+// 公告数据是空的（src/data/auto-listing-notices.ts 里还没写东西），
+// 这一页现在只是个空壳，先跟其它未启用页面一样走 404。
+if (notices.length === 0) {
+	return Astro.redirect("/404/");
+}
 const latestNotice = availableNotices[0] ?? notices[0] ?? {
 	version: "", displayVersion: "暂无公告", kicker: "NOTICE",
 	title: "暂无公告", desc: "请在 src/data 中添加自己的公告。", brief: "",
@@ -37,7 +42,7 @@ const noticeMetaJson = JSON.stringify(
 );
 ---
 
-<MainGridLayout title="更新日志" description="自动上架系统完整更新公告">
+<MainGridLayout title="更新日志" description="本站的更新公告">
 	<section
 		class="notice-page"
 		data-notice-root

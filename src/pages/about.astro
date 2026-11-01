@@ -78,8 +78,23 @@ const aboutChangelogEntries = aboutChangelogMilestones.flatMap((milestone) => {
 
 const personalProjects: { title: string; description: string; tags: string[]; tone: string; icon: string }[] = [];
 
-const interests: string[] = [];
-const stack: string[] = [];
+const interests: string[] = [
+	"机器学习",
+	"RAG 与应用",
+	"数学",
+	"服务器折腾",
+	"小工具",
+];
+const stack: string[] = [
+	"Python",
+	"C",
+	"Astro",
+	"TypeScript",
+	"Svelte",
+	"Linux",
+	"nginx",
+	"Git",
+];
 const serverStatusEndpoint = serviceConfig.serverStatusUrl;
 const serverStats = [
 	{
@@ -146,7 +161,7 @@ const serverStats = [
 					<p class="profile-lead">{profileConfig.bio}</p>
 					<div class="profile-status" aria-label="当前状态">
 						<span class="profile-status__dot"></span>
-						<span>请填写自己的介绍与当前状态</span>
+						<span>在校学生 · 在记数学和计算机的笔记</span>
 					</div>
 				</div>
 			</div>
@@ -154,7 +169,7 @@ const serverStats = [
 			<div class="profile-actions" aria-label="个人主页操作">
 				<a class="profile-action profile-action--primary" href="https://github.com/Jarvis0227/Aemeath" target="_blank" rel="noopener noreferrer">
 					<Icon is:inline name="fa7-brands:github" aria-hidden="true" />
-					<span>查看 GitHub</span>
+					<span>本站主题源码</span>
 					<Icon is:inline name="material-symbols:arrow-outward-rounded" aria-hidden="true" />
 				</a>
 				<a class="profile-action" href="/guestbook/">
@@ -224,15 +239,15 @@ const serverStats = [
 							</article>
 						))}
 					</div>
-					<p class="project-continuation">暂无项目，请在关于页面添加自己的项目。</p>
+					<p class="project-continuation">项目这块先空着。等做出拿得出手的东西，再一个一个填进来。</p>
 				</section>
 
 				<section class="profile-panel card-base profile-foundation-panel" aria-labelledby="profile-foundation-title">
 					<header class="profile-section-heading">
 						<h2 id="profile-foundation-title">站在巨人的肩膀上</h2>
-						<span class="profile-section-note">页面加载 · GitHub API</span>
+						<span class="profile-section-note">致谢 · 开源</span>
 					</header>
-					<p class="profile-foundation-copy">我的博客源码开源在 Aemeath。本站基于 CuteLeaf 的 Firefly 主题继续二次创作，也在这里向原作者致谢。</p>
+					<p class="profile-foundation-copy">本站用的是开源主题 Aemeath（CuteLeaf Firefly 的二次创作）。主题代码走 MIT 协议，文字和图片是我自己的。</p>
 					<Markdown class="profile-foundation-list">
 						<OpenSourceContent />
 					</Markdown>
@@ -246,7 +261,7 @@ const serverStats = [
 						<Icon is:inline name="material-symbols:explore-rounded" aria-hidden="true" />
 						<h2 id="interests-title">正在关注</h2>
 					</header>
-					<p>请填写自己的兴趣和关注方向。</p>
+					<p>大部分时间花在数学课和写代码上，剩下的都记在杂记里。</p>
 					<div class="chip-list">
 						{interests.map((item) => <span>{item}</span>)}
 					</div>
@@ -269,13 +284,21 @@ const serverStats = [
 						<h2 id="connect-title">保持联系</h2>
 					</header>
 					<div class="profile-connect-list">
-						<a href="https://github.com/Jarvis0227" target="_blank" rel="noopener noreferrer"><Icon is:inline name="fa7-brands:github" aria-hidden="true" /><span>GitHub</span><Icon class="profile-connect-arrow" is:inline name="material-symbols:arrow-outward-rounded" aria-hidden="true" /></a>
-						<span>请在 profileConfig.ts 中添加自己的社交链接。</span>
-
+						{profileConfig.links.length > 0 ? (
+							profileConfig.links.map((link) => (
+								<a href={link.url} target="_blank" rel="noopener noreferrer">
+									<Icon is:inline name={link.icon} aria-hidden="true" />
+									<span>{link.name}</span>
+									<Icon class="profile-connect-arrow" is:inline name="material-symbols:arrow-outward-rounded" aria-hidden="true" />
+								</a>
+							))
+						) : (
+							<span>暂时没留别的联系方式。想加 GitHub、B 站之类的，在 src/config/profileConfig.ts 的 links 里填一条就会出现在这里。</span>
+						)}
 					</div>
 				</section>
 
-				<section class="profile-panel profile-side-panel profile-server-panel card-base" aria-labelledby="server-title" data-server-metrics data-server-endpoint={serverStatusEndpoint}>
+				<section class:list={["profile-panel profile-side-panel profile-server-panel card-base", !serverStatusEndpoint && "hidden"]} aria-labelledby="server-title" data-server-metrics data-server-endpoint={serverStatusEndpoint}>
 					<header class="profile-side-heading profile-server-heading">
 						<Icon is:inline name="material-symbols:cloud-outline" aria-hidden="true" />
 						<h2 id="server-title">服务器状态</h2>
