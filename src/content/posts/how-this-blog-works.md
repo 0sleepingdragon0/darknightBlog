@@ -108,7 +108,7 @@ location /_astro/ {
 
 ## 已知的坑
 
-**国内服务器 80 端口需要备案。** 没域名的时候只能先用 IP 访问。
+**国内服务器 80 端口需要备案。** 域名 `darknight.website` 已经买了，备案提交在管局审核中，这期间只能用 `http://<server-ip>` 访问。DNS 解析先别急着加 A 记录——域名没备案就指到内地服务器，会被阿里云直接拦掉，反而拖慢审核。
 
 **Cockpit 占了 443。** 服务器的 Web 管理面板反代在 `https://<IP>/start`，博客不跟它抢，用 80。
 
@@ -116,4 +116,4 @@ location /_astro/ {
 
 ## 还没做的
 
-评论（Waline）和访问统计（Umami）都没上，先把纯静态链路跑通。HTTPS 证书等域名备案下来再配。
+评论（Waline）和访问统计（Umami）都没上，先把纯静态链路跑通。备案下来以后按顺序做三件事：nginx 里把 `server_name` 换成域名并给 443 签一张 certbot 证书、`src/config/siteConfig.ts` 的 `site_url` 改成 `https://darknight.website` 重新构建、页脚的备案信息位填上备案号。

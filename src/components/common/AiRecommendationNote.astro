@@ -18,12 +18,12 @@ const serializedSegments = JSON.stringify(segments);
 <div
 	class:list={["banner-post-ai-summary", "ai-recommendation-note", className]}
 	role="note"
-	aria-label="AI推荐，由 ChatGPT Sol 5.6 Max 提供"
+	aria-label="AI推荐，内容由 AI 辅助生成"
 >
 	<div class="banner-post-ai-summary__label">
 		<Icon is:inline name="material-symbols:auto-awesome-rounded" class="text-[1.05em]" />
 		<span>AI推荐</span>
-		<span class="banner-post-ai-summary__provider">由 ChatGPT Sol 5.6 Max 提供</span>
+		<span class="banner-post-ai-summary__provider">内容由 AI 辅助生成</span>
 	</div>
 	<p aria-live="polite" aria-label={text}>
 		<span
