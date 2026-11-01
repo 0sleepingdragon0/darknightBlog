@@ -1,6 +1,6 @@
 # 站点双主题
 
-导航栏的“主题”入口可以切换 Aemeath 与 Pure；Pure 中入口为导航栏右侧的主题图标，与搜索、深浅色按钮并列，菜单内可调整字体。默认使用 Aemeath，访客选择存入 `rainzt.site-theme.v1`；浅色 / 深色仍使用原有 `theme` 设置，两者互不覆盖。Pure 的强调色同样继承原项目的 `themeColor.hue`、访客保存的色相和节日主题设置。`src/config/siteThemeConfig.ts` 可以设置默认主题或关闭选择入口。
+导航栏的“主题”入口可以切换 Aemeath 与 Pure；Pure 中入口为导航栏右侧的主题图标，与搜索、深浅色按钮并列，菜单内可调整字体。默认使用 Aemeath，访客选择存入 `darknight.site-theme.v1`；浅色 / 深色仍使用原有 `theme` 设置，两者互不覆盖。Pure 的强调色同样继承原项目的 `themeColor.hue`、访客保存的色相和节日主题设置。`src/config/siteThemeConfig.ts` 可以设置默认主题或关闭选择入口。
 
 Pure 的独立导航、文章列表、标签侧栏、阅读栏、目录和页脚按 [Astro Theme Pure](https://github.com/cworld1/astro-theme-pure) 的布局适配。首页采用上游 Blog 页而非作者主页，正文标题按本站习惯显示“主页”；卡片封面保留右侧渐隐背景，透明度提高为 38%，同时加深简介文字以保持可读性。参考上游 `src/layouts/BaseLayout.astro`、`src/pages/blog/[...page].astro`、`packages/pure/components/basic/Header.astro` 与 `packages/pure/components/pages/PostPreview.astro`，保留 Apache-2.0 归属；上游许可随附于 `docs/licenses/astro-theme-pure-LICENSE.txt`。适配使用现有 Astro 7、Tailwind 与内容字段，不引入上游的演示文章或独立的内容集合。字体沿用项目的 `FontSetup`、`fontConfig` 与 `firefly-font-mode`，Pure 的主题菜单同样可选择默认字体 / 霞鹜文楷。
 

@@ -406,9 +406,9 @@ const hasMultipleImages =
 	<script is:inline>
 		(() => {
 			try {
-				if (window.localStorage.getItem("rainzt.home-portfolio-intro-enabled.v1") === "0") {
+				if (window.localStorage.getItem("darknight.home-portfolio-intro-enabled.v1") === "0") {
 					document.documentElement.classList.add("home-portfolio-intro-disabled");
-				} else if (window.sessionStorage.getItem("rainzt.home-portfolio-intro-seen.v1") === "1") {
+				} else if (window.sessionStorage.getItem("darknight.home-portfolio-intro-seen.v1") === "1") {
 					document.documentElement.classList.add("home-portfolio-intro-seen");
 				}
 			} catch {

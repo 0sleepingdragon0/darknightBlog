@@ -16,10 +16,10 @@ import {
 
 (() => {
 	const runtimeWindow = window as typeof window & {
-		__rainztWalineManagerStarted?: boolean;
+		__darknightWalineManagerStarted?: boolean;
 	};
-	if (runtimeWindow.__rainztWalineManagerStarted) return;
-	runtimeWindow.__rainztWalineManagerStarted = true;
+	if (runtimeWindow.__darknightWalineManagerStarted) return;
+	runtimeWindow.__darknightWalineManagerStarted = true;
 
 	const rootSelector = "[data-waline-root]";
 	const localPreviewHosts = new Set([
@@ -202,7 +202,7 @@ import {
 
 	type LottieWindow = Window & {
 		lottie?: LottieRuntime;
-		__rainztLottieRuntimePromise?: Promise<LottieRuntime>;
+		__darknightLottieRuntimePromise?: Promise<LottieRuntime>;
 	};
 
 	const getQQAvatarUrl = (value: string) => {
@@ -497,14 +497,14 @@ import {
 		const loadRuntime = () => {
 			if (runtimeWindow.lottie) return Promise.resolve(runtimeWindow.lottie);
 			if (runtimePromise) return runtimePromise;
-			if (runtimeWindow.__rainztLottieRuntimePromise) {
-				runtimePromise = runtimeWindow.__rainztLottieRuntimePromise;
+			if (runtimeWindow.__darknightLottieRuntimePromise) {
+				runtimePromise = runtimeWindow.__darknightLottieRuntimePromise;
 				return runtimePromise;
 			}
 
 			runtimePromise = new Promise<LottieRuntime>((resolve, reject) => {
 				const existingScript = document.querySelector<HTMLScriptElement>(
-					"script[data-rainzt-lottie-runtime]",
+					"script[data-darknight-lottie-runtime]",
 				);
 				const script = existingScript || document.createElement("script");
 				const handleLoad = () => {
@@ -519,11 +519,11 @@ import {
 				if (!existingScript) {
 					script.src = runtimePath;
 					script.async = true;
-					script.dataset.rainztLottieRuntime = "true";
+					script.dataset.darknightLottieRuntime = "true";
 					document.head.appendChild(script);
 				}
 			});
-			runtimeWindow.__rainztLottieRuntimePromise = runtimePromise;
+			runtimeWindow.__darknightLottieRuntimePromise = runtimePromise;
 			return runtimePromise;
 		};
 
@@ -1291,14 +1291,14 @@ import {
 		const loadRuntime = () => {
 			if (runtimeWindow.lottie) return Promise.resolve(runtimeWindow.lottie);
 			if (runtimePromise) return runtimePromise;
-			if (runtimeWindow.__rainztLottieRuntimePromise) {
-				runtimePromise = runtimeWindow.__rainztLottieRuntimePromise;
+			if (runtimeWindow.__darknightLottieRuntimePromise) {
+				runtimePromise = runtimeWindow.__darknightLottieRuntimePromise;
 				return runtimePromise;
 			}
 
 			runtimePromise = new Promise<LottieRuntime>((resolve, reject) => {
 				const existingScript = document.querySelector<HTMLScriptElement>(
-					"script[data-rainzt-lottie-runtime]",
+					"script[data-darknight-lottie-runtime]",
 				);
 				const script = existingScript || document.createElement("script");
 				const handleLoad = () => {
@@ -1313,11 +1313,11 @@ import {
 				if (!existingScript) {
 					script.src = runtimePath;
 					script.async = true;
-					script.dataset.rainztLottieRuntime = "true";
+					script.dataset.darknightLottieRuntime = "true";
 					document.head.appendChild(script);
 				}
 			});
-			runtimeWindow.__rainztLottieRuntimePromise = runtimePromise;
+			runtimeWindow.__darknightLottieRuntimePromise = runtimePromise;
 			return runtimePromise;
 		};
 

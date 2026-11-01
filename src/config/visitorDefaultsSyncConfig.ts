@@ -7,7 +7,7 @@ import { homePortfolioIntroSettings } from "./homePortfolioIntro";
  * 清除旧偏好后，各设置继续读取现有的仓库默认配置。
  */
 export const visitorDefaultsSyncConfig: VisitorDefaultsSyncConfig = {
-	storageKey: "rainzt.visitor-defaults-sync.2026-10-06",
+	storageKey: "darknight.visitor-defaults-sync.2026-10-06",
 	preferenceKeys: [
 		"theme",
 		"hue",
@@ -38,5 +38,5 @@ export const visitorDefaultsSyncConfig: VisitorDefaultsSyncConfig = {
 		homePortfolioIntroSettings.topBannerStorageKey,
 		homePortfolioIntroSettings.bottomBannerStorageKey,
 	],
-	sessionPreferenceKeys: ["rainzt.home-portfolio-intro-seen.v1"],
+	sessionPreferenceKeys: ["darknight.home-portfolio-intro-seen.v1"],
 };

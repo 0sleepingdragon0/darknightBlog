@@ -78,7 +78,7 @@ const hasPublicStats = Boolean(
 
 <script is:inline define:vars={{ shareId, shareApiBase }}>
 	(() => {
-		const runtimeKey = "__rainztAnalyticsSnapshotRuntime";
+		const runtimeKey = "__darknightAnalyticsSnapshotRuntime";
 		const runtime = window[runtimeKey] || { inFlight: false, initialized: false };
 		window[runtimeKey] = runtime;
 		const dayMs = 24 * 60 * 60 * 1000;
@@ -90,7 +90,7 @@ const hasPublicStats = Boolean(
 		const snapshotAnimationFrames = new WeakMap();
 		const snapshotAnimationPending = new WeakMap();
 		const snapshotOverlayTimers = new WeakMap();
-		const animationClockKey = "__rainztAnalyticsAnimationClock";
+		const animationClockKey = "__darknightAnalyticsAnimationClock";
 		let snapshotVisibilityObserver;
 		const easeCountProgress = (progress) => progress < 0.18
 			? 0.08 * Math.pow(progress / 0.18, 2)
@@ -111,7 +111,7 @@ const hasPublicStats = Boolean(
 				},
 				replay() {
 					this.startedAt = null;
-					window.dispatchEvent(new CustomEvent("rainzt-analytics-animation-replay"));
+					window.dispatchEvent(new CustomEvent("darknight-analytics-animation-replay"));
 				},
 			};
 			window[animationClockKey] = clock;
@@ -158,14 +158,14 @@ const hasPublicStats = Boolean(
 		};
 
 		const fetchShare = async () => {
-			const cached = readCache(`rainzt:umami:share:${shareId}`, dayMs);
+			const cached = readCache(`darknight:umami:share:${shareId}`, dayMs);
 			if (cached?.websiteId && cached?.token) return cached;
 			let lastError;
 			for (const path of [`/api/share/${encodeURIComponent(shareId)}`, `/api/share/id/${encodeURIComponent(shareId)}`]) {
 				try {
 					const share = await fetchJson(`${apiBase}${path}`);
 					if (share?.websiteId && share?.token) {
-						writeCache(`rainzt:umami:share:${shareId}`, share);
+						writeCache(`darknight:umami:share:${shareId}`, share);
 						return share;
 					}
 				} catch (error) {
@@ -268,7 +268,7 @@ const hasPublicStats = Boolean(
 			snapshotVisibilityObserver.observe(root);
 		};
 		if (!runtime.replayBound) {
-			window.addEventListener("rainzt-analytics-animation-replay", () => {
+			window.addEventListener("darknight-analytics-animation-replay", () => {
 				[...getRoots(), ...getPeriodRoots()].forEach((root) => {
 					const values = snapshotAnimationPending.get(root);
 					if (values) queueSnapshotAnimation(root, values);
@@ -529,7 +529,7 @@ const normalizeBreakdown = (rows) => {
 					Object.entries(params).forEach(([key, value]) => url.searchParams.set(key, String(value)));
 					return url;
 				};
-				const cacheKey = `rainzt:umami:analytics-snapshot:${share.websiteId}:30`;
+				const cacheKey = `darknight:umami:analytics-snapshot:${share.websiteId}:30`;
 				const cached = readCache(cacheKey, 2 * 60 * 1000);
 				const payload = cached || await Promise.all([
 					fetchJson(buildUrl("stats", startAt, endAt), { headers }),

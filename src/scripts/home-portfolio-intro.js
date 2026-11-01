@@ -10,20 +10,20 @@ export {};
 	let activeTimer = 0;
 	let playbackToken = 0;
 	let navbarRevealAnimation = null;
-	const introSessionKey = "rainzt.home-portfolio-intro-seen.v1";
+	const introSessionKey = "darknight.home-portfolio-intro-seen.v1";
 	const intro = document.getElementById("home-portfolio-intro");
 	const introEnabledStorageKey =
 		intro?.getAttribute("data-enabled-storage-key") ||
-		"rainzt.home-portfolio-intro-enabled.v1";
+		"darknight.home-portfolio-intro-enabled.v1";
 	const introCharacterStorageKey =
 		intro?.getAttribute("data-character-storage-key") ||
-		"rainzt.home-portfolio-intro-character.v1";
+		"darknight.home-portfolio-intro-character.v1";
 	const introTopBannerStorageKey =
 		intro?.getAttribute("data-top-banner-storage-key") ||
-		"rainzt.home-portfolio-intro-top-banner.v1";
+		"darknight.home-portfolio-intro-top-banner.v1";
 	const introBottomBannerStorageKey =
 		intro?.getAttribute("data-bottom-banner-storage-key") ||
-		"rainzt.home-portfolio-intro-bottom-banner.v1";
+		"darknight.home-portfolio-intro-bottom-banner.v1";
 	const defaultCharacterId =
 		intro?.getAttribute("data-default-character") || "character-03";
 	const defaultTopBannerId =

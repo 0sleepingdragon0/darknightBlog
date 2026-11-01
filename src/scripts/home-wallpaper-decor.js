@@ -152,7 +152,7 @@ export {};
 		mediaQuery.addEventListener?.("change", applyLayout);
 	};
 
-	const themeLayoutEventKey = "__rainztNationalDayStickerLayoutBound";
+	const themeLayoutEventKey = "__darknightNationalDayStickerLayoutBound";
 	if (!window[themeLayoutEventKey]) {
 		window[themeLayoutEventKey] = true;
 		window.addEventListener("nationalDayThemeChange", () => {

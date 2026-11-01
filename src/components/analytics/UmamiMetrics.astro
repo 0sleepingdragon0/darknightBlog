@@ -18,14 +18,14 @@ const {
 
 <script is:inline define:vars={{ shareId, shareApiBase, historicalVisitors, historicalPageviews, localPreview }}>
 	(() => {
-		const namespace = "__rainztUmamiMetrics";
-		const shareCacheKey = "rainzt:umami:share";
-		const metricsCacheKey = "rainzt:umami:metrics";
-		const statsCacheKey = "rainzt:umami:stats";
-		const friendClickCacheKey = "rainzt:umami:friend-clicks:v2";
+		const namespace = "__darknightUmamiMetrics";
+		const shareCacheKey = "darknight:umami:share";
+		const metricsCacheKey = "darknight:umami:metrics";
+		const statsCacheKey = "darknight:umami:stats";
+		const friendClickCacheKey = "darknight:umami:friend-clicks:v2";
 		const friendClickEventName = "friend-link-click";
 		const legacyFriendClickEventName = "outbound-link-click";
-		const friendClickPreviewStorageKey = "rainzt:umami:friend-click-preview";
+		const friendClickPreviewStorageKey = "darknight:umami:friend-click-preview";
 		const shareCacheTtl = 24 * 60 * 60 * 1000;
 		const metricsCacheTtl = 60 * 1000;
 		const pendingRequests = new Map();
@@ -46,7 +46,7 @@ const {
 		const historicalPageviewCount = Math.max(0, Math.floor(Number(historicalPageviews) || 0));
 		const localPreviewHosts = new Set(["localhost", "127.0.0.1", "::1", "0.0.0.0"]);
 		const numberAnimationFrames = new WeakMap();
-		const animationClockKey = "__rainztAnalyticsAnimationClock";
+		const animationClockKey = "__darknightAnalyticsAnimationClock";
 		let summaryCounterObserver;
 		const isLocalHost = localPreviewHosts.has(window.location.hostname.toLowerCase()) || window.location.protocol === "file:";
 		const isLocalAnalytics = localPreview || isLocalHost;
@@ -66,7 +66,7 @@ const {
 				},
 				replay() {
 					this.startedAt = null;
-					window.dispatchEvent(new CustomEvent("rainzt-analytics-animation-replay"));
+					window.dispatchEvent(new CustomEvent("darknight-analytics-animation-replay"));
 				},
 			};
 			window[animationClockKey] = clock;
@@ -484,9 +484,9 @@ const {
 				renderStatValue(element, target);
 			});
 		};
-		if (!window.__rainztAnalyticsReplayBound) {
-			window.addEventListener("rainzt-analytics-animation-replay", replaySummaryAnimations);
-			window.__rainztAnalyticsReplayBound = true;
+		if (!window.__darknightAnalyticsReplayBound) {
+			window.addEventListener("darknight-analytics-animation-replay", replaySummaryAnimations);
+			window.__darknightAnalyticsReplayBound = true;
 		}
 
 		function handleLocalFriendClick(event) {

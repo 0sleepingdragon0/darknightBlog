@@ -1,7 +1,7 @@
 import "./friend-visibility";
 
 (() => {
-	const avatarFallbackNamespace = "__rainztFriendAvatarFallback";
+	const avatarFallbackNamespace = "__darknightFriendAvatarFallback";
 	if (window[avatarFallbackNamespace]) return;
 
 	document.addEventListener(

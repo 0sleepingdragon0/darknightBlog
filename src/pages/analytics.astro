@@ -534,7 +534,7 @@ const walineServerUrl =
 
 <script is:inline define:vars={{ hasPublicStats, defaultCommentAvatar: DEFAULT_COMMENT_AVATAR, commentAvatarProviders: COMMENT_AVATAR_PROVIDERS }}>
 	(() => {
-		const runtimeKey = "__rainztAnalyticsPageRuntime";
+		const runtimeKey = "__darknightAnalyticsPageRuntime";
 		const runtime = window[runtimeKey] || {
 			activeRoot: null,
 			cleanup: null,
@@ -543,7 +543,7 @@ const walineServerUrl =
 		const timeZone = "Asia/Shanghai";
 		const defaultActionRunsPerDay = 2;
 		const numberFormatter = new Intl.NumberFormat("zh-CN");
-		const animationClockKey = "__rainztAnalyticsAnimationClock";
+		const animationClockKey = "__darknightAnalyticsAnimationClock";
 		const datePartsFormatter = new Intl.DateTimeFormat("zh-CN", {
 			timeZone,
 			year: "numeric",
@@ -586,7 +586,7 @@ const walineServerUrl =
 				},
 				replay() {
 					this.startedAt = null;
-					window.dispatchEvent(new CustomEvent("rainzt-analytics-animation-replay"));
+					window.dispatchEvent(new CustomEvent("darknight-analytics-animation-replay"));
 				},
 			};
 			window[animationClockKey] = clock;
@@ -716,7 +716,7 @@ const walineServerUrl =
 
 		const readSharedShare = (shareId) => {
 			try {
-				const cached = JSON.parse(localStorage.getItem("rainzt:umami:share") || "null");
+				const cached = JSON.parse(localStorage.getItem("darknight:umami:share") || "null");
 				if (
 					cached?.tag === shareId &&
 					cached?.value?.websiteId &&
@@ -755,7 +755,7 @@ const walineServerUrl =
 			throw lastError || new Error("public share unavailable");
 		};
 
-		const getCacheKey = (websiteId, range) => `rainzt:umami:dashboard:${websiteId}:${range}`;
+		const getCacheKey = (websiteId, range) => `darknight:umami:dashboard:${websiteId}:${range}`;
 		const readCache = (key) => {
 			try {
 				const cached = JSON.parse(localStorage.getItem(key) || "null");
@@ -1020,10 +1020,10 @@ const walineServerUrl =
 			const footer = root.querySelector("[data-analytics-footer]");
 			if (!footer) return () => {};
 			const handleAnimationReplay = () => animateAnalyticsFooter(root);
-			window.addEventListener("rainzt-analytics-animation-replay", handleAnimationReplay);
+			window.addEventListener("darknight-analytics-animation-replay", handleAnimationReplay);
 			animateAnalyticsFooter(root);
 			return () => {
-				window.removeEventListener("rainzt-analytics-animation-replay", handleAnimationReplay);
+				window.removeEventListener("darknight-analytics-animation-replay", handleAnimationReplay);
 				const frame = footerAnimationFrames.get(footer);
 				if (frame) cancelAnimationFrame(frame);
 				footerAnimationFrames.delete(footer);
@@ -1353,11 +1353,11 @@ const walineServerUrl =
 			list.replaceChildren(fragment);
 			animateRankingValues(root);
 		};
-		if (!window.__rainztAnalyticsRankingReplayBound) {
-			window.addEventListener("rainzt-analytics-animation-replay", () => {
+		if (!window.__darknightAnalyticsRankingReplayBound) {
+			window.addEventListener("darknight-analytics-animation-replay", () => {
 				document.querySelectorAll("[data-umami-dashboard]").forEach(animateRankingValues);
 			});
-			window.__rainztAnalyticsRankingReplayBound = true;
+			window.__darknightAnalyticsRankingReplayBound = true;
 		}
 
 		const domesticRegionAliases = new Map([
@@ -1617,11 +1617,11 @@ const walineServerUrl =
 			};
 			domesticRegionAnimationFrames.set(panel, requestAnimationFrame(tick));
 		};
-		if (!window.__rainztAnalyticsRegionReplayBound) {
-			window.addEventListener("rainzt-analytics-animation-replay", () => {
+		if (!window.__darknightAnalyticsRegionReplayBound) {
+			window.addEventListener("darknight-analytics-animation-replay", () => {
 				document.querySelectorAll("[data-domestic-region-map][data-region-ready='true']").forEach(animateDomesticRegion);
 			});
-			window.__rainztAnalyticsRegionReplayBound = true;
+			window.__darknightAnalyticsRegionReplayBound = true;
 		}
 		const renderDomesticRegion = (panel, payload) => {
 			ensureDomesticRegionMapGeometry(panel);
@@ -2015,11 +2015,11 @@ const walineServerUrl =
 			const handleAnimationReplay = () => {
 				if (root.querySelector("[data-comments-list]")?.dataset.commentsState === "ready") animateRecentComments(root);
 			};
-			window.addEventListener("rainzt-analytics-animation-replay", handleAnimationReplay);
+			window.addEventListener("darknight-analytics-animation-replay", handleAnimationReplay);
 			load();
 			return () => {
 				controller.abort();
-				window.removeEventListener("rainzt-analytics-animation-replay", handleAnimationReplay);
+				window.removeEventListener("darknight-analytics-animation-replay", handleAnimationReplay);
 				const list = root.querySelector("[data-comments-list]");
 				const frame = list && recentCommentsAnimationFrames.get(list);
 				if (frame) cancelAnimationFrame(frame);
@@ -2617,7 +2617,7 @@ const walineServerUrl =
 				if (!heatmapGrid?.contains(event.relatedTarget)) resetHeatmapDetail();
 			};
 			const handleAnimationReplay = () => renderCurrentHeatmap();
-			window.addEventListener("rainzt-analytics-animation-replay", handleAnimationReplay);
+			window.addEventListener("darknight-analytics-animation-replay", handleAnimationReplay);
 			heatmapGrid?.addEventListener("pointerleave", resetHeatmapDetail);
 			heatmapGrid?.addEventListener("focusout", handleHeatmapFocusout);
 			const heatmapResizeObserver = typeof ResizeObserver === "function" && heatmapScroll
@@ -2728,7 +2728,7 @@ const walineServerUrl =
 				if (pushAnimationFrame) cancelAnimationFrame(pushAnimationFrame);
 				heatmapResizeObserver?.disconnect();
 				snake.destroy();
-				window.removeEventListener("rainzt-analytics-animation-replay", handleAnimationReplay);
+				window.removeEventListener("darknight-analytics-animation-replay", handleAnimationReplay);
 				heatmapGrid?.removeEventListener("pointerleave", resetHeatmapDetail);
 				heatmapGrid?.removeEventListener("focusout", handleHeatmapFocusout);
 				modeHandlers.forEach(([button, handler]) => button.removeEventListener("click", handler));
@@ -2884,12 +2884,12 @@ const walineServerUrl =
 			};
 
 			const handleAnimationReplay = () => animateActivity();
-			window.addEventListener("rainzt-analytics-animation-replay", handleAnimationReplay);
+			window.addEventListener("darknight-analytics-animation-replay", handleAnimationReplay);
 			load();
 			return () => {
 				controller.abort();
 				if (activityAnimationFrame) cancelAnimationFrame(activityAnimationFrame);
-				window.removeEventListener("rainzt-analytics-animation-replay", handleAnimationReplay);
+				window.removeEventListener("darknight-analytics-animation-replay", handleAnimationReplay);
 				cells.forEach((cell) => {
 					cell.replaceWith(cell.cloneNode(true));
 				});

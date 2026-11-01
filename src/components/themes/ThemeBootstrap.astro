@@ -19,8 +19,8 @@ const {
 		const requested = new URLSearchParams(window.location.search).get("siteTheme");
 		let saved;
 		try {
-			saved = localStorage.getItem("rainzt.site-theme.v1");
-			if (valid(requested)) localStorage.setItem("rainzt.site-theme.v1", requested);
+			saved = localStorage.getItem("darknight.site-theme.v1");
+			if (valid(requested)) localStorage.setItem("darknight.site-theme.v1", requested);
 		} catch {
 			// The URL also supports theme selection when browser storage is blocked.
 			root.dataset.siteThemePersistence = "url";

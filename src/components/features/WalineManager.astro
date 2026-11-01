@@ -27,7 +27,7 @@
 			history.replaceState(history.state, "", "#post-comments");
 		}
 		root.closest<HTMLElement>("#post-comments")?.scrollIntoView({ behavior: "instant", block: "start" });
-		if ((window as typeof window & { __rainztWalineManagerStarted?: boolean }).__rainztWalineManagerStarted) {
+		if ((window as typeof window & { __darknightWalineManagerStarted?: boolean }).__darknightWalineManagerStarted) {
 			document.dispatchEvent(new CustomEvent("waline:friend-application"));
 		} else {
 			root.dataset.friendsApplicationPending = "true";

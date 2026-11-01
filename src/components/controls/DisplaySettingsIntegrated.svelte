@@ -561,7 +561,7 @@ function toggleIntroEnabled() {
 			introEnabled ? "1" : "0",
 		);
 		if (introEnabled)
-			sessionStorage.removeItem("rainzt.home-portfolio-intro-seen.v1");
+			sessionStorage.removeItem("darknight.home-portfolio-intro-seen.v1");
 	} catch {
 		// 私有浏览模式下无法持久化时，仍让当前页面立即响应切换。
 	}
@@ -617,7 +617,7 @@ function resetIntroSettings() {
 		localStorage.removeItem(homePortfolioIntroSettings.characterStorageKey);
 		localStorage.removeItem(homePortfolioIntroSettings.topBannerStorageKey);
 		localStorage.removeItem(homePortfolioIntroSettings.bottomBannerStorageKey);
-		sessionStorage.removeItem("rainzt.home-portfolio-intro-seen.v1");
+		sessionStorage.removeItem("darknight.home-portfolio-intro-seen.v1");
 	} catch {
 		// 私有浏览模式下无法持久化时，仍恢复当前页面的默认值。
 	}

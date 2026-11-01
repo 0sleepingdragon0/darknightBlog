@@ -59,7 +59,7 @@ const choices = [
 		if (document.documentElement.dataset.siteTheme === theme) return;
 		const destination = new URL(window.location.href);
 		try {
-			localStorage.setItem("rainzt.site-theme.v1", theme);
+			localStorage.setItem("darknight.site-theme.v1", theme);
 			// A URL override must not defeat the visitor's new selection.
 			destination.searchParams.delete("siteTheme");
 		} catch {
@@ -92,7 +92,7 @@ const choices = [
 	window.addEventListener("pageshow", (event) => {
 		if (event.persisted && siteThemeConfig.enabled && !new URLSearchParams(location.search).has("siteTheme")) {
 			try {
-				const saved = localStorage.getItem("rainzt.site-theme.v1");
+				const saved = localStorage.getItem("darknight.site-theme.v1");
 				if ((saved === "pure" || saved === "aemeath") && saved !== document.documentElement.dataset.siteTheme) {
 					location.reload();
 					return;
