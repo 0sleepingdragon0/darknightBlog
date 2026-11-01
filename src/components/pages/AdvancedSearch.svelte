@@ -142,13 +142,13 @@ const input = () => {
 
 <section class="search-page" aria-labelledby="search-page-title">
  <header class="hero">
-  <p class="eyebrow"><i></i>RAIN'S ARCHIVE</p>
+  <p class="eyebrow"><i></i>DARKNIGHT ARCHIVE</p>
   <h1 id="search-page-title">{title}</h1>
-  <p>{description || "从项目复盘、博客改造到零散思考，把写过的内容重新找回来。"}</p>
+  <p>{description || "从技术笔记、数学作业到零散随想，把写过的内容重新找回来。"}</p>
   <div class="field">
    <label class="sr-only" for="search-input">{title}</label><Icon icon="material-symbols:search-rounded" />
    <input id="search-input" type="search" placeholder="输入关键词，搜索文章与页面" bind:value={keyword} on:input={input} />
-   <small>{keyword ? (loading ? "正在检索" : "找到 "+results.length+" 条") : "试试：AI、自动上架、博客"}</small>
+   <small>{keyword ? (loading ? "正在检索" : "找到 "+results.length+" 条") : "试试：博客、Astro、数学"}</small>
   </div>
  </header>
  <div class="result-head">{#if keyword && !loading && results.length}<p><strong>{results.length}</strong> 条和「{keyword}」有关的记录</p><span>文章和站内页面按相关度排列</span>{:else if !keyword}<p>输入一个词，开始翻找这座小小的内容档案室。</p>{/if}</div>
@@ -158,7 +158,7 @@ const input = () => {
   <div class="list">{#each results as result, index}
    <article class="card" style={"--i:"+index}>
     <a href={result.url}>
-     <div class:fallback={!result.image} class="cover">{#if result.image}<img src={formatUrl(result.image)} alt="" loading={index>1?"lazy":"eager"} />{:else}<b>{clean(result.meta.title).slice(0,1)||"R"}</b><Icon icon="material-symbols:article-rounded" />{/if}</div>
+     <div class:fallback={!result.image} class="cover">{#if result.image}<img src={formatUrl(result.image)} alt="" loading={index>1?"lazy":"eager"} />{:else}<b>{clean(result.meta.title).slice(0,1)||"D"}</b><Icon icon="material-symbols:article-rounded" />{/if}</div>
      <div class="body">
       <div class="meta"><span>{result.category || (result.page ? "页面" : "文章")}</span><time>{result.published ? date(result.published) : (result.page ? "站内页面" : "博客记录")}</time></div>
       <h2>{@html result.meta.title}</h2><p class="excerpt">{@html result.excerpt || "这条记录暂时没有摘要，点进去看看完整内容。"}</p>
@@ -168,7 +168,7 @@ const input = () => {
    </article>
   {/each}</div>
  {:else if keyword}
-  <div class="empty"><Icon icon="material-symbols:travel-explore-rounded" /><h2>暂时没找到这条线索</h2><p>换一个更短的关键词试试，或从“AI”“博客”“自动化”这类主题开始。</p></div>
+  <div class="empty"><Icon icon="material-symbols:travel-explore-rounded" /><h2>暂时没找到这条线索</h2><p>换一个更短的关键词试试，或从“笔记”“部署”“杂记”这类主题开始。</p></div>
  {:else}
   <div class="empty"><Icon icon="material-symbols:auto-stories-rounded" /><h2>从一段关键词开始</h2><p>搜索会覆盖文章标题、摘要、分类与标签。</p></div>
  {/if}

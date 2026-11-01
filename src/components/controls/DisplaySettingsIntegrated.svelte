@@ -1004,8 +1004,8 @@ $effect(() => {
                 <span class="national-day-theme-toggle__title">中国红-国庆专属</span>
                 <span class="national-day-theme-toggle__description">
                     {nationalDayThemeEnabled
-                        ? "国庆配色、壁纸和贴纸已启用"
-                        : "常规配色与原版主页已恢复"}
+                        ? "已切换到国庆配色"
+                        : "当前是常规配色"}
                 </span>
             </span>
             <span class="national-day-theme-toggle__state">
