@@ -3,7 +3,6 @@ import { getEntry, render } from "astro:content";
 import Comment from "@components/comment/index.astro";
 import Markdown from "@components/common/Markdown.astro";
 import FriendAvatarMarquee from "@components/friends/FriendAvatarMarquee.astro";
-import FriendRecommendationGuide from "@components/friends/FriendRecommendationGuide.astro";
 import FriendsMagicLink from "@components/friends/FriendsMagicLink.astro";
 import { Icon } from "astro-icon/components";
 import {
@@ -64,9 +63,6 @@ const normalizeFriendUrl = (url: string) =>
 		.replace(/\/+$/, "")
 		.toLowerCase();
 const ownSiteUrl = normalizeFriendUrl(siteConfig.site_url);
-const recommendedFriends = items.filter(
-	(item) => item.recommended === true && normalizeFriendUrl(item.siteurl) !== ownSiteUrl,
-);
 const feed = await loadFriendsFeed(items, { cachedOnly: import.meta.env.DEV });
 const rssUpdates = new Map<string, { date: Date; title: string; stale: boolean }>();
 const staleFeeds = new Set(feed.sources.filter(source => source.stale).map(source => normalizeFriendUrl(source.friendUrl)));
@@ -121,7 +117,6 @@ const description =
         </div>
 
         <div class="friends-heading-actions">
-          <FriendRecommendationGuide friends={recommendedFriends} />
           <a
             href="#post-comments"
             class="friends-apply-button"
