@@ -15,7 +15,9 @@ licenseUrl: https://creativecommons.org/licenses/by-nc-sa/4.0/
 comment: false
 ---
 
-以后忘了就查这篇。核心只有一句：**在本地改文件，push 上去，服务器自己构建。**
+以后忘了就查这篇。核心只有一句：**在本地改文件，然后 `npm run deploy:cf` 上线。**
+
+域名走 Cloudflare Pages，服务器那份是 IP 直连的备用出口。平时只管 Cloudflare 这条，两边都要更新就再补一次 `git push`。
 
 ## 准备工作
 
@@ -59,7 +61,7 @@ lang: zh-CN
 
 只有 `title` 和 `published` 必填，其它都有默认值。
 
-写完正文直接 `git` 三步走。
+写完正文提交，然后部署。
 
 ## 发布
 
@@ -67,6 +69,24 @@ lang: zh-CN
 cd /d/服务器测试/blog
 git add src/content/posts/
 git commit -m "posts: 新增《文章标题》"
+npm run deploy:cf
+```
+
+最后这条会先把整条构建链跑一遍（图标 → LQIP → 友链底色 → astro build → 字体子集 → Pagefind），再把 `dist` 传给 Cloudflare。本地跑完整构建一分多钟，上传半分钟，比服务器快得多。看到
+
+```text
+✨ Deployment complete! Take a peek over at https://xxxxxxxx.darknight-alp.pages.dev
+```
+
+就算成功了。生产地址是 `https://darknight-alp.pages.dev`，前面那串哈希是这次部署的快照，用来验证改动不影响别人。
+
+> 如果上传显示成功但站点打不开、返回 522，说明最后注册 deployment 的请求丢了。重跑一次 `npm run deploy:cf`，文件按哈希去重，秒完。
+
+## 顺手更新服务器那份（可选）
+
+想让 IP 直连那份也同步，再推一次：
+
+```bash
 git push server main
 ```
 
@@ -85,7 +105,9 @@ remote: [2026-11-01 12:39:12] ===== deploy 20261101-123456 OK =====
 
 ## 部署失败了怎么办
 
-先看 push 输出里有没有 `FAIL`。没看到的话上服务器查完整日志：
+Cloudflare 这条如果失败，报错会直接打在终端里，构建阶段的错和上传阶段的错一眼能分开。构建没过就按报错改，改完重跑；上传阶段网络断了也直接重跑，`dist` 没变的话是秒传。
+
+服务器那条先看 push 输出里有没有 `FAIL`。没看到的话上服务器查完整日志：
 
 ```bash
 ssh <user>@<server-ip> 'tail -50 /srv/blog/deploy.log'
@@ -111,7 +133,7 @@ ssh <user>@<server-ip> 'tail -50 /srv/blog/deploy.log'
 | `themeColor.ts` | 主题色 |
 | `licenseConfig.ts` | 文章版权声明 |
 
-改完同样 push 上线。
+改完同样 `npm run deploy:cf` 上线。
 
 `siteConfig.ts` 里的 `pages` 是功能开关，比如想开相册就把 `gallery` 改成 `true`：
 
@@ -133,19 +155,21 @@ pages: {
 转格式可以用 `sharp-cli`：
 
 ```bash
-pnpm dlx sharp-cli -i in.png -o out.webp -q 82
+corepack pnpm dlx sharp-cli -i in.png -o out.webp -q 82
 ```
 
-## 关于本地预览
+## 本地预览
 
-服务器上构建一次三四分钟，改一行字也要等这么久不划算。本地预览是：
+改样式、看排版，起本地开发服务器最快：
 
 ```bash
 cd /d/服务器测试/blog
 corepack pnpm dev
 ```
 
-不过有个已知问题：主题的标题字体在构建时会从 jsdelivr 拉，我这边网络连不上它。**如果 `dev` 卡在字体报错上，就放弃本地预览，直接 push 上线看。** 反正只是文字的话，线上看也一样。
+`pnpm` 没单独装，用 `corepack` 前缀调，它会按 `package.json` 里的 `packageManager` 字段拉 9.14.4。
+
+之前一直以为本地构建跑不起来——主题字体要在构建时从 jsdelivr 拉，怀疑笔记本连不上它，所以只在服务器上构建。实测是错的，本地 `astro build`、字体子集化、Pagefind 全都能一次过，所以现在的部署才改成本地构建再上传。
 
 ## 别做的事
 

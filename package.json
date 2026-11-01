@@ -8,6 +8,7 @@
     "check": "astro check",
 		"build": "node scripts/generate-icons.js && tsx scripts/generate-lqips.ts && pnpm friend-colors && astro build && tsx scripts/subset-fonts.ts && pagefind --site dist",
     "preview": "astro preview",
+    "deploy:cf": "node scripts/generate-icons.js && tsx scripts/generate-lqips.ts && tsx scripts/generate-friend-avatar-colors.ts && astro build && tsx scripts/subset-fonts.ts && pagefind --site dist && wrangler pages deploy dist --project-name darknight",
     "astro": "astro",
     "type-check": "tsc --noEmit --isolatedDeclarations",
     "new-post": "node scripts/new-post.js",

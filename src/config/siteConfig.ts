@@ -14,8 +14,8 @@ export const siteConfig: SiteConfig = {
 	// Aemeath 主题版本
 	themeVersion: "V4.3.0",
 
-	// 站点 URL：换成域名后要同步改这里，否则 RSS / sitemap 里的链接会是错的
-	site_url: "http://<server-ip>",
+	// 站点 URL：RSS / sitemap / canonical / og 标签全部以这里为准
+	site_url: "https://darknight.website",
 
 	// 站点描述
 	description:
