@@ -11,7 +11,7 @@ title: 关于
 ## 这个站
 
 - 主题：[Aemeath](https://github.com/Jarvis0227/Aemeath)（Astro + Svelte，MIT 协议），样式参考了 <a href="https://rainzt.cn/" target="_blank">rainzt.cn</a>
-- 部署：主站在 Cloudflare Pages，域名 `darknight.website`；另有一份构建产物挂在阿里云 ECS 上，只有 IP 访问，当备用
+- 部署：Cloudflare Pages，域名 `darknight.website`。以前还有一份构建产物挂在阿里云 ECS 上走 IP 直连，2026-11-02 下掉了，过程记在《这个博客是怎么跑起来的》
 - 订阅：RSS 是 [rss.xml](/rss.xml)，侧栏、页脚和资料卡上都有入口
 - 素材：首页壁纸和头像是原创生成图，文章配图除注明来源外都是自己的
 - 协议：代码遵循主题原本的 MIT，**站内文字和图片采用 CC BY-NC-SA 4.0**，转载注明出处即可

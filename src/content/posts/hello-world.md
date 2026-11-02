@@ -42,6 +42,6 @@ comment: false
 
 样式参考了 <a href="https://rainzt.cn/" target="_blank">rainzt.cn</a> 所用的开源主题 [Aemeath](https://github.com/Jarvis0227/Aemeath)，代码是 MIT 协议，文字和图片是我自己的。
 
-它跑在一台阿里云的服务器上，首页的壁纸和头像是生成的原创图。以后可能会换。
+它跑在 Cloudflare Pages 上，首页的壁纸和头像是生成的原创图。以后可能会换。
 
 慢慢来。
