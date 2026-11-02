@@ -17,16 +17,16 @@ comment: false
 
 以后忘了就查这篇。核心只有一句：**在本地改文件，然后 `npm run deploy:cf` 上线。**
 
-域名走 Cloudflare Pages，服务器那份是 IP 直连的备用出口。平时只管 Cloudflare 这条，两边都要更新就再补一次 `git push`。
+域名走 Cloudflare Pages，只有这一条链路。服务器那份已经在 2026-11-02 下掉了，仓库改成推 GitHub 存档。
 
 ## 准备工作
 
-博客源码在本地 `D:\服务器测试\blog`。远程仓库在服务器上：
+博客源码在本地 `D:\服务器测试\blog`。远程仓库在 GitHub：
 
 ```bash
 cd /d/服务器测试/blog
 git remote -v
-# server  ssh://<user>@<server-ip>/srv/blog/git/blog.git (push)
+# origin  https://github.com/0sleepingdragon0/darknightBlog.git (push)
 ```
 
 如果显示的是这个，直接往下走。
@@ -70,9 +70,10 @@ cd /d/服务器测试/blog
 git add src/content/posts/
 git commit -m "posts: 新增《文章标题》"
 npm run deploy:cf
+git push origin main
 ```
 
-最后这条会先把整条构建链跑一遍（图标 → LQIP → 友链底色 → astro build → 字体子集 → Pagefind），再把 `dist` 传给 Cloudflare。本地跑完整构建一分多钟，上传半分钟，比服务器快得多。看到
+`deploy:cf` 会先把整条构建链跑一遍（图标 → LQIP → 友链底色 → astro build → 字体子集 → Pagefind），再把 `dist` 传给 Cloudflare。本地跑完整构建一分多钟，上传半分钟。看到
 
 ```text
 ✨ Deployment complete! Take a peek over at https://xxxxxxxx.darknight-alp.pages.dev
@@ -82,40 +83,21 @@ npm run deploy:cf
 
 > 如果上传显示成功但站点打不开、返回 522，说明最后注册 deployment 的请求丢了。重跑一次 `npm run deploy:cf`，文件按哈希去重，秒完。
 
-## 顺手更新服务器那份（可选）
+最后那条 `git push` 只是存档，不 push 也不影响线上——站点内容完全来自本地构建的 `dist`。反过来说，**push 忘了只会丢备份，`deploy:cf` 忘了才是真没上线**，所以顺序上先部署再推。
 
-想让 IP 直连那份也同步，再推一次：
+GitHub 那条走 HTTPS，第一次会弹浏览器让你登录授权。本机连 GitHub 的 22 端口不通，所以别配 SSH remote。代理没开的话 push 会失败：
 
 ```bash
-git push server main
+git -c http.proxy=http://127.0.0.1:7897 push origin main
 ```
-
-push 完输出里会出现 `remote:`，那就是部署日志在实时往外打。大概长这样：
-
-```text
-remote: [2026-11-01 12:34:56] ===== deploy 20261101-123456 start =====
-remote: [2026-11-01 12:35:02] pnpm install
-remote: [2026-11-01 12:36:40] pnpm build
-remote: [2026-11-01 12:39:11] live -> /srv/blog/releases/20261101-123456
-remote: [2026-11-01 12:39:12] nginx reloaded
-remote: [2026-11-01 12:39:12] ===== deploy 20261101-123456 OK =====
-```
-
-**三四分钟是正常的**，服务器只有 1.7G 内存，构建慢。看到 `OK` 就行，刷新页面。
 
 ## 部署失败了怎么办
 
 Cloudflare 这条如果失败，报错会直接打在终端里，构建阶段的错和上传阶段的错一眼能分开。构建没过就按报错改，改完重跑；上传阶段网络断了也直接重跑，`dist` 没变的话是秒传。
 
-服务器那条先看 push 输出里有没有 `FAIL`。没看到的话上服务器查完整日志：
-
-```bash
-ssh <user>@<server-ip> 'tail -50 /srv/blog/deploy.log'
-```
-
 最常见的两种：
 
-**构建报错，站点没更新。** 放心，这时线上还是上一个正常版本——软链接只在构建成功后才切换。按日志里的报错改 Markdown 或配置，重新 push。
+**构建报错，站点没更新。** 放心，这时线上还是上一个正常版本——Pages 只在整个 `dist` 上传成功后才切换生产指针。按报错改 Markdown 或配置，重跑。
 
 **frontmatter 校验没过。** 一般是日期格式写错了（必须是 `YYYY-MM-DD`）或者 `tags` 没写成列表。
 
@@ -173,4 +155,6 @@ corepack pnpm dev
 
 ## 别做的事
 
-不要直接在服务器上改文件。`/srv/blog/app` 是部署时 checkout 出来的，下次 push 会被 `checkout -f` 覆盖掉。要改就改本地、提交、推上去。
+不要把服务器地址、登录用户名这类东西写进文章或者提交进仓库。`deploy/` 那个目录（nginx 配置和部署钩子）已经跟着 ECS 一起没用了，也从 git 历史里剔掉了——真要找回这套思路，去看《这个博客是怎么跑起来的》，那边只讲原理，不带可连接的细节。
+
+改完内容记得 `git push`。构建产物 `dist/` 和 `node_modules/` 已经在 `.gitignore` 里，不要提交。

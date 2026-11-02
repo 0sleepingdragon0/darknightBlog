@@ -1,7 +1,7 @@
 ---
 title: 这个博客是怎么跑起来的
 published: 2026-11-01
-description: 记录站点的部署链路——一份构建产物同时喂给 Cloudflare Pages 和自建 nginx，以及两边各自的坑。
+description: 记录站点的部署链路——现在只有 Cloudflare Pages 一条，附一段已经下线的自建 nginx 方案，以及各自的坑。
 aiPolished: false
 image: /assets/images/wallpaper/darknight-night.webp
 imageColor: "#151a30"
@@ -21,23 +21,21 @@ comment: false
 
 静态博客。用户访问的永远是构建产物（一堆 HTML / CSS / JS），不需要跑 Node 服务。
 
-同一份内容推两个地方，各走各的链路：
+现在只有一条：
 
 ```text
-本地改内容
-  ├─ npm run deploy:cf ──▶ 本地构建 dist ──▶ wrangler 上传 ──▶ Cloudflare Pages ──▶ darknight.website
-  └─ git push server main ──▶ 服务器 post-receive 自己构建 ──▶ nginx ──▶ <server-ip>
+本地改内容 ──▶ npm run deploy:cf ──▶ 本地构建 dist ──▶ wrangler 上传 ──▶ Cloudflare Pages ──▶ darknight.website
 ```
 
-为什么要两份：域名挂在内地服务器上备案走不通（那台 ECS 在朋友的账号里，个人账号之间没法授权备案服务码），而境外节点压根不产生备案义务。于是域名交给 Cloudflare，服务器留一个 IP 直连当备用出口，顺便练手 nginx。
+以前下面还挂着第二条：同样的内容 `git push` 到一台阿里云 ECS，服务器上的 `post-receive` 钩子自己构建，nginx 听 80 端口，用 IP 直连当备用出口。**2026-11-02 这条已经下掉了**，站点只剩 Pages。所以下面写服务器那部分时，我用的是过去时——它是我练手 nginx 的一段，不是现在的线上状态。
 
-下面先写 Cloudflare 这条，再写服务器那条。
+当初为什么要两份：域名挂在内地服务器上备案走不通（那台 ECS 在朋友的账号里，个人账号之间没法授权备案服务码），而境外节点压根不产生备案义务。于是域名交给 Cloudflare，服务器留一个 IP 直连当备用出口，顺便练手 nginx。
 
 ## Cloudflare Pages 这条链路
 
 `npm run deploy:cf` 一条命令做完所有事：生成图标和 LQIP、算友链头像底色、`astro build`、字体子集化、Pagefind 建索引，最后 `wrangler pages deploy dist`。
 
-没有走「连 GitHub 自动构建」那条路，两个原因：这个仓库只有本地和服务器两个 remote，没往 GitHub 推；而且 Pages 的构建容器只有 4 GB 内存和 512 并发限制，不如在自己机器上构建快——笔记本跑完整构建一分多钟，上传 359 个文件半分钟。
+没有走「连 GitHub 自动构建」那条路。仓库现在是推到 GitHub 的，但那边只当备份，没接进 Pages 的构建流水线——Pages 的构建容器只有 4 GB 内存和 512 并发限制，不如在自己机器上构建快：笔记本跑完整构建一分多钟，上传 359 个文件半分钟。
 
 第一次部署有个坑：wrangler 把文件全传完了（`Success! Uploaded 359 files`），最后注册 deployment 那一步网络抖了一下报 `fetch failed`。这时候项目是空的，访问返回 **522**，光看上传成功会误以为上线了。重跑一次即可，资产按哈希去重，秒传。
 
@@ -53,21 +51,23 @@ comment: false
 
 另外改 NS 要求域名实名认证已经通过，实名没过阿里云会拒绝修改。
 
-## 服务器上的目录
+## 服务器那条（已下线）
 
-所有东西都在 `/srv/blog` 下面，职责分得很开：
+当时的目录全放在一个专门的根下，职责分得很开：
 
 ```text
 /srv/blog/
-├── git/blog.git/       # bare 仓库，push 到这里
+├── git/blog.git/            # bare 仓库，push 到这里
 │   └── hooks/post-receive   # 部署脚本
-├── app/                # 源码工作区（构建时占用）
+├── app/                     # 源码工作区（构建时占用）
 │   └── node_modules/
-├── releases/           # 每次构建的产物，按时间戳存
+├── releases/                # 每次构建的产物，按时间戳存
 │   └── 20261101-121100/
 ├── current ─────▶ releases/20261101-121100
-└── deploy.log          # 部署日志
+└── deploy.log               # 部署日志
 ```
+
+具体是哪台机器、用什么账号登录，这里都不写。那台 ECS 不是我的账号，把一个能直接连上去的地址贴在公开文章里不是好习惯——就算博客只有几个人看，也不该这么干。
 
 `current` 是个软链接，nginx 只认它。切换版本就是把软链接指向新的 release，所以发布是瞬时的，不会出现「构建到一半用户看到半截页面」。
 
@@ -84,7 +84,7 @@ while read -r _old new ref; do
 done
 ```
 
-**用 `nice -n 19` 跑构建**。这台机器内存只有 1.7 GB，Astro 构建会吃满 CPU。不加 nice 的话构建期间服务器基本没法用。同时给 Node 设了上限：
+**用 `nice -n 19` 跑构建**。那台机器内存只有 1.7 GB，Astro 构建会吃满 CPU。不加 nice 的话构建期间服务器基本没法用——上面还跑着别人的东西。同时给 Node 设了上限：
 
 ```bash
 nice -n 19 env NODE_OPTIONS=--max-old-space-size=1200 pnpm build
@@ -107,6 +107,8 @@ ls -1dt "$REL_ROOT"/*/ | tail -n +4 | xargs -r rm -rf
 ```
 
 回滚就是从 `releases/` 里挑一个旧时间戳，把软链接重新指过去。
+
+这套写法本身是值得留下的，就算不用了。原子切换软链接那一招，Pages 其实用另一种方式做了——每次部署是一个带哈希前缀的快照域名，生产域名只是一个指针，回滚就是把指针指回旧快照。
 
 ## 缓存策略
 
@@ -136,12 +138,20 @@ Cache-Control: public, max-age=31536000, immutable, public, max-age=0, must-reva
 
 **备案这件事最后没走通。** 卡在第 5 步选云产品实例——那台 ECS 在朋友的阿里云账号里，而跨账号授权备案服务码要求**对方是企业实名认证**，个人账号只能给自己账号下的服务器生成。买付费服务码也不行，它必须绑定在同一个账号里符合条件的实例上。所以只剩两条路：在朋友账号里以我的身份提交（会永久占掉那个账号唯一的主体名额），或者自己买台便宜的内地机。目前选了第三条：域名不碰内地节点，直接挂 Cloudflare，境外节点不产生备案义务。
 
-**Cockpit 占了 443。** 服务器的 Web 管理面板反代在 `https://<IP>/start`，博客不跟它抢，用 80。
+**服务器管理面板占了 443。** 博客不跟它抢端口，只用 80。
 
-**本地构建其实能跑。** 原先以为主题的字体在构建时要从 jsdelivr 拉、笔记本连不上，所以一直只在服务器上构建。实际试下来 `astro build` 在本地一次过，字体子集化和 Pagefind 也都正常，那条判断是错的。
+**本地构建其实能跑。** 原先以为主题的字体在构建时要从 jsdelivr 拉、笔记本连不上，所以一直只在服务器上构建。实际试下来 `astro build` 在本地一次过，字体子集化和 Pagefind 也都正常，那条判断是错的。这也是敢把服务器那条下掉的底气——构建不依赖那台机器。
+
+## 为什么最后只留 Pages
+
+备用出口听起来稳妥，实际是我在多维护一份没人访问的东西。IP 直连的站点没人会收藏，搜索引擎也不认；域名既然已经在 Cloudflare 上，Pages 挂了的话备用的 IP 也帮不上什么——反正访问的人连域名都打不开。
+
+而多一条链路就多一份成本：那台 ECS 是朋友的账号，我在上面跑了个跟人家无关的站点，构建时吃满 CPU、装了几百 MB 的 `node_modules`。练手 nginx 的目的已经达到，剩下的只是维护负担。
+
+所以下线。仓库转推 GitHub 当备份，部署只剩 `npm run deploy:cf` 一条命令。
 
 ## 还没做的
 
-评论（Waline）和访问统计（Umami）都没上，先把纯静态链路跑通。HTTPS 在 Cloudflare 侧是自动签发的，不用管；内地那台如果以后要上证书再走 certbot。
+评论（Waline）和访问统计（Umami）都没上，先把纯静态链路跑通。HTTPS 在 Cloudflare 侧是自动签发的，不用管。
 
 国内访问速度目前没测。真觉得慢再考虑套一层 Cloudflare 优选 IP，或者上腾讯云 EdgeOne Pages 回源——但那是等有人抱怨慢以后再说的事。
