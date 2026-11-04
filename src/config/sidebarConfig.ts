@@ -71,8 +71,8 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 		{
 			// 组件类型：音乐播放器
 			type: "music",
-			// 是否启用该组件（本站未准备音乐素材，关闭）
-			enable: false,
+			// 是否启用该组件
+			enable: true,
 			// 组件位置
 			position: "sticky",
 			// 是否在文章详情页显示
@@ -271,7 +271,7 @@ export const sidebarLayoutConfig: SidebarLayoutConfig = {
 		{
 			// 组件类型：音乐播放器
 			type: "music",
-			// 是否启用该组件（本站未准备音乐素材，关闭）
+			// 移动端保持关闭：入口走导航栏，底部再堆一张卡片会挤掉正文空间
 			enable: false,
 			// 文章页正文后不再堆叠侧栏卡片，保留正文与页脚的阅读空间
 			showOnPostPage: false,

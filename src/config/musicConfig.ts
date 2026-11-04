@@ -7,8 +7,8 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	// 1. 侧边栏：在sidebarConfig.ts侧边栏配置把音乐组件enable设为false禁用即可
 	// 2. 导航栏：在本配置文件把showInNavbar设为false禁用即可
 
-	// 是否在导航栏显示音乐播放器入口（本站未准备音乐素材，关闭）
-	showInNavbar: false,
+	// 是否在导航栏显示音乐播放器入口
+	showInNavbar: true,
 
 	// 使用方式："meting" 使用 Meting API，"local" 使用本地音乐列表
 	mode: "local",
@@ -19,8 +19,8 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	// 播放模式：'list'=列表循环, 'one'=单曲循环, 'random'=随机播放
 	playMode: "list",
 
-	// 是否显启用歌词
-	showLyrics: true,
+	// 是否显启用歌词（三首曲目都没有 lrc，关掉以免歌词区一直空着）
+	showLyrics: false,
 
 	// Meting API 配置
 	meting: {
@@ -43,11 +43,29 @@ export const musicPlayerConfig: MusicPlayerConfig = {
 	},
 
 	// 本地音乐配置（当 mode 为 'local' 时使用）
-	// 1. 支持传入歌词文件的路径
-	// lrc: "/assets/music/lrc/使一颗心免于哀伤-哼唱.lrc",
-	// 2. 或者直接填入歌词字符串内容
-	// lrc: "[00:00.00]歌词内容...",
+	// 1. 支持传入歌词文件的路径，例如 lrc: "/assets/music/lrc/xxx.lrc"
+	// 2. 或者直接填入歌词字符串内容，例如 lrc: "[00:00.00]歌词内容..."
+	//
+	// 下面三首来自 Incompetech（Kevin MacLeod），CC BY 4.0 授权。
+	// 署名要求记在 public/assets/music/ATTRIBUTION.txt，同时显示在 /about/ 的「开源」页。
+	// 文件名用 ASCII，因为 url() 只拼 BASE_URL、不做 URL 编码。
 	local: {
-		playlist: [],
+		playlist: [
+			{
+				name: "Starry",
+				artist: "Kevin MacLeod",
+				url: "/assets/music/starry.mp3",
+			},
+			{
+				name: "Evening Fall (Harp)",
+				artist: "Kevin MacLeod",
+				url: "/assets/music/evening-fall-harp.mp3",
+			},
+			{
+				name: "Late Night Radio",
+				artist: "Kevin MacLeod",
+				url: "/assets/music/late-night-radio.mp3",
+			},
+		],
 	},
 };

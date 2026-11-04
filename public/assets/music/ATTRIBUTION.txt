@@ -1,0 +1,60 @@
+背景音乐授权 / Background Music Licensing
+==========================================
+
+本目录下三个 MP3 均取自 Incompetech，作者 Kevin MacLeod，
+以 Creative Commons Attribution 4.0 International（CC BY 4.0）授权。
+
+曲目目录：https://incompetech.com/music/royalty-free/music.html
+授权全文：https://creativecommons.org/licenses/by/4.0/
+作者要求的署名文本由曲目页直接给出，格式见下，与本站 /about/ 的「背景音乐」小节一致。
+
+
+1) starry.mp3
+   "Starry" Kevin MacLeod (incompetech.com)
+   Licensed under Creative Commons: By Attribution 4.0 License
+   http://creativecommons.org/licenses/by/4.0/
+
+   ISRC         USUAN1100062
+   时长          00:03:19
+   乐器          Piano
+   Feel         Relaxed, Calming
+   原始文件名     Starry.mp3
+   曲目页         https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100062
+
+
+2) evening-fall-harp.mp3
+   "Evening Fall (Harp)" Kevin MacLeod (incompetech.com)
+   Licensed under Creative Commons: By Attribution 4.0 License
+   http://creativecommons.org/licenses/by/4.0/
+
+   ISRC         USUAN1100236
+   时长          00:02:25
+   乐器          Harp
+   Feel         Dark, Calming, Eerie
+   专辑          Thoughtful（2005）
+   原始文件名     Evening Fall - Harp.mp3
+   曲目页         https://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100236
+
+
+3) late-night-radio.mp3
+   "Late Night Radio" Kevin MacLeod (incompetech.com)
+   Licensed under Creative Commons: By Attribution 4.0 License
+   http://creativecommons.org/licenses/by/4.0/
+
+   ISRC         USUAN2100003
+   时长          00:04:24
+   乐器          Electric Piano, Bass, Drums, Synth
+   Feel         Calming, Relaxed
+   原始文件名     Late Night Radio.mp3
+   曲目页         https://incompetech.com/music/royalty-free/index.html?isrc=USUAN2100003
+
+
+关于再散布 / Regarding redistribution
+-------------------------------------
+CC BY 4.0 允许复制、再散布和商用，条件是保留署名、指明授权条款，并在改动的
+地方做出标注。所以这三个文件可以随源码一起放进公开仓库——前提是本文件与站上
+的署名一并存在。
+
+文件名从 "Starry.mp3" / "Evening Fall - Harp.mp3" / "Late Night Radio.mp3" 改为
+ASCII 小写连字符形式，只是为了避开 URL 编码问题；音频本身未经剪辑、转码或
+改变比特率。下载时逐一核对过与源站 Content-Length 的字节数，一致。
