@@ -50,8 +50,9 @@ const navbarTitleFontVar = fontConfig.enable
 	})();
 </script>
 
+{/* selected 只有 "system" 时 Astro Font API 未注册任何字体，cssVariable 的推导类型是空联合(never) */}
 {Array.from(allCssVars).map((cssVar) => (
-	<Font cssVariable={cssVar as any} preload={selectedFontVars.includes(cssVar)} />
+	<Font cssVariable={cssVar as never} preload={selectedFontVars.includes(cssVar)} />
 ))}
 
 {fontConfig.enable && (

@@ -17,9 +17,9 @@ const mobileWallpapers = [
 	"/assets/images/wallpaper/darknight-night.webp",
 ];
 
-export const homepageWallpaper = desktopWallpapers[0];
-export const alternateHomepageWallpaper = desktopWallpapers[1];
-export const mobileHomepageWallpaper = mobileWallpapers[0];
+export const homepageWallpaper: string = desktopWallpapers[0];
+export const alternateHomepageWallpaper: string = desktopWallpapers[1];
+export const mobileHomepageWallpaper: string = mobileWallpapers[0];
 
 export const backgroundWallpaper: BackgroundWallpaperConfig = {
 	// 壁纸模式："banner" 横幅壁纸，"fullscreen" 全屏壁纸，"overlay" 全屏透明，"none" 纯色背景
