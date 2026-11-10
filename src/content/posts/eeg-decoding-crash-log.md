@@ -6,7 +6,7 @@ aiPolished: false
 image: /assets/images/wallpaper/darknight-rain.webp
 imageColor: "#1b2340"
 tags: [实验记录, 神经解码]
-category: 随笔
+category: 大肥鱼日记
 draft: false
 lang: zh-CN
 author: darknight
